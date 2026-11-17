@@ -3,6 +3,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,3 +24,12 @@ jobs:
         with:
           name: agents-mod-jar
           path: build/libs/*.jar
+      - name: Publicar Release (jar pronto para instalar)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          JAR=$(ls build/libs/agents-mod-*.jar | grep -v sources | head -n1)
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest "$JAR" --title "Agents Mod - última versão" \
+            --notes "Minecraft 1.21.11 (Fabric). Requer Fabric Loader 0.18+ e Fabric API 0.141.6+1.21.11. Baixe o .jar e coloque na pasta mods."
