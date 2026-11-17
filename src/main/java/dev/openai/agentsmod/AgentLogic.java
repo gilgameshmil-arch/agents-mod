@@ -242,16 +242,11 @@ public final class AgentLogic {
         return down.getType() == HitResult.Type.MISS ? target : down.getLocation();
     }
 
-    private static boolean pvp(ServerLevel level) {
-        MinecraftServer server = level.getServer();
-        return server != null && server.isPvpAllowed();
-    }
-
     /** Inimigo: monstros hostis e, com PvP ligado, jogadores fora da sua equipe. */
     private static boolean isFoe(ServerPlayer owner, LivingEntity e) {
         if (e == owner || !e.isAlive() || e.isSpectator()) return false;
         if (e instanceof Player pl) {
-            return !pl.isCreative() && pvp((ServerLevel) owner.level()) && !owner.isAlliedTo(pl);
+            return !pl.isCreative() && owner.canHarmPlayer(pl);
         }
         return e instanceof Enemy;
     }
@@ -259,7 +254,7 @@ public final class AgentLogic {
     /** Aliado: o próprio jogador e outros jogadores (todos, se o PvP está desligado; senão, só a equipe). */
     private static boolean isAlly(ServerPlayer owner, LivingEntity e) {
         if (!(e instanceof Player pl) || !e.isAlive() || e.isSpectator()) return false;
-        return e == owner || !pvp((ServerLevel) owner.level()) || owner.isAlliedTo(pl);
+        return e == owner || !owner.canHarmPlayer(pl);
     }
 
     private static List<LivingEntity> near(ServerLevel level, Vec3 c, double r) {
