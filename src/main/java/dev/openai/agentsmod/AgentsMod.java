@@ -31,6 +31,13 @@ public class AgentsMod implements ModInitializer {
         }
     }
 
+    public static final Item CONTRACT;
+
+    static {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MOD_ID, "reassignment_contract"));
+        CONTRACT = Registry.register(BuiltInRegistries.ITEM, key, new ContractItem(new Item.Properties().setId(key).stacksTo(16)));
+    }
+
     @Override
     public void onInitialize() {
         Net.register();
@@ -40,7 +47,10 @@ public class AgentsMod implements ModInitializer {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, tabKey, FabricItemGroup.builder()
                 .title(Component.translatable("itemGroup.agentsmod.main"))
                 .icon(() -> new ItemStack(UNLOCK_ITEMS.get(0)))
-                .displayItems((params, output) -> UNLOCK_ITEMS.forEach(output::accept))
+                .displayItems((params, output) -> {
+                    output.accept(CONTRACT);
+                    UNLOCK_ITEMS.forEach(output::accept);
+                })
                 .build());
     }
 }

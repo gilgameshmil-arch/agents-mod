@@ -65,11 +65,21 @@ public final class Net {
         public Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
 
+    /** Servidor -> cliente: abrir a tela de loadout (usado pelo Contrato de Reatribuição). */
+    public record OpenLoadoutS2C() implements CustomPacketPayload {
+        public static final Type<OpenLoadoutS2C> TYPE = typeOf("open_loadout");
+        public static final StreamCodec<RegistryFriendlyByteBuf, OpenLoadoutS2C> CODEC = StreamCodec.unit(new OpenLoadoutS2C());
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    }
+
     public static void register() {
         PayloadTypeRegistry.playC2S().register(AbilityC2S.TYPE, AbilityC2S.CODEC);
         PayloadTypeRegistry.playC2S().register(ShotC2S.TYPE, ShotC2S.CODEC);
         PayloadTypeRegistry.playC2S().register(SelectC2S.TYPE, SelectC2S.CODEC);
         PayloadTypeRegistry.playS2C().register(StateS2C.TYPE, StateS2C.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenLoadoutS2C.TYPE, OpenLoadoutS2C.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(AbilityC2S.TYPE,
                 (payload, context) -> AgentLogic.tryActivate(context.player(), payload.slot(), payload.dirX(), payload.dirZ()));
         ServerPlayNetworking.registerGlobalReceiver(ShotC2S.TYPE,

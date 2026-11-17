@@ -40,6 +40,8 @@ public class AgentsClient implements ClientModInitializer {
                 "key." + AgentsMod.MOD_ID + ".loadout", InputConstants.Type.KEYSYM, InputConstants.KEY_V, category));
 
         ClientPlayNetworking.registerGlobalReceiver(Net.StateS2C.TYPE, (payload, context) -> ClientState.apply(payload));
+        ClientPlayNetworking.registerGlobalReceiver(Net.OpenLoadoutS2C.TYPE,
+                (payload, context) -> context.client().execute(() -> context.client().setScreen(new LoadoutScreen())));
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ClientState.reset();
             dashTicksLeft = 0;

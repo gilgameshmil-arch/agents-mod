@@ -32,6 +32,11 @@ public class UnlockItem extends Item {
                     Component.translatable(ability.nameKey())), true);
             return InteractionResult.FAIL;
         }
+        if (!AgentLogic.canUnlock(sp, ability)) {
+            sp.displayClientMessage(Component.translatable("message.agentsmod.wrong_agent",
+                    Component.translatable(ability.agent.nameKey())), true);
+            return InteractionResult.FAIL;
+        }
         AgentLogic.unlock(sp, ability);
         stack.consume(1, player);
         sp.displayClientMessage(Component.translatable("message.agentsmod.unlocked",

@@ -29,7 +29,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
@@ -77,6 +82,10 @@ public final class AgentLogic {
     private static final Map<String, ParticleOptions> PARTICLES = new HashMap<>();
     private static long now = 0;
 
+    static void addEffect(Effect e) { PENDING.add(e); }
+
+    static long now() { return now; }
+
     public static void init() {
         FxDisplays.init();
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -120,6 +129,12 @@ public final class AgentLogic {
         return word < w.size() && (w.get(word) & (1 << (d.index & 31))) != 0;
     }
 
+    /** Só se desbloqueia habilidade do agente ativo; sem agente ativo, o primeiro desbloqueio ativa aquele agente. */
+    public static boolean canUnlock(ServerPlayer p, AbilityDef d) {
+        AgentDef cur = selectedAgent(p);
+        return cur == null || cur.index == d.agent.index;
+    }
+
     public static void unlock(ServerPlayer p, AbilityDef d) {
         List<Integer> old = words(p);
         List<Integer> next = new ArrayList<>();
@@ -127,7 +142,7 @@ public final class AgentLogic {
         int word = d.index >> 5;
         next.set(word, next.get(word) | (1 << (d.index & 31)));
         p.setAttached(UNLOCKS, next);
-        if (selectedAgent(p) == null) p.setAttached(SELECTED, d.agent.id); // primeiro desbloqueio equipa o agente
+        if (selectedAgent(p) == null) p.setAttached(SELECTED, d.agent.id); // primeiro desbloqueio ativa o agente
         sync(p);
     }
 
@@ -135,16 +150,72 @@ public final class AgentLogic {
         return Defs.agent(p.getAttachedOrElse(SELECTED, ""));
     }
 
+    /**
+     * Troca de agente. Só é permitida sem agente ativo (depois de usar o Contrato de Reatribuição); escolher o agente
+     * que já está ativo é aceito. Habilidades desbloqueadas ficam salvas por agente, e só as do agente ativo funcionam.
+     */
     public static void select(ServerPlayer p, int agentIndex) {
         if (agentIndex < -1 || agentIndex >= Defs.AGENTS.size()) return;
+        AgentDef current = selectedAgent(p);
         AgentDef agent = Defs.agent(agentIndex);
-        p.setAttached(SELECTED, agent == null ? "" : agent.id);
-        MODES.remove(p.getUUID());
-        DASHES.remove(p.getUUID());
-        if (agent != null) {
-            p.displayClientMessage(Component.translatable("message.agentsmod.equipped", Component.translatable(agent.nameKey())), true);
+        if (current != null && (agent == null || agent.index != current.index)) {
+            p.displayClientMessage(Component.translatable("message.agentsmod.need_contract"), true);
+            sync(p);
+            return;
         }
+        if (agent == null) return; // sem agente e pedindo "nenhum": nada a fazer
+        p.setAttached(SELECTED, agent.id);
+        p.displayClientMessage(Component.translatable("message.agentsmod.equipped", Component.translatable(agent.nameKey())), true);
         sync(p);
+    }
+
+    /** Contrato de Reatribuição: retira o agente atual (habilidades continuam salvas) e libera a escolha de outro. */
+    public static boolean retireAgent(ServerPlayer p) {
+        if (selectedAgent(p) == null) return false;
+        p.setAttached(SELECTED, "");
+        endModes(p);
+        DASHES.remove(p.getUUID());
+        sync(p);
+        return true;
+    }
+
+    private static void endModes(ServerPlayer p) {
+        MODES.remove(p.getUUID());
+        Fx3D.Orbit o = Fx3D.Orbit.BY_OWNER.remove(p.getUUID());
+        if (o != null) {
+            o.knives.forEach(id -> FxDisplays.kill((ServerLevel) p.level(), id));
+            o.knives.clear();
+        }
+    }
+
+    /** Munição do modo de tiro ativo (-1 = sem modo). */
+    public static int modeAmmo(UUID owner) {
+        ModeState m = MODES.get(owner);
+        return m == null ? -1 : m.ammo;
+    }
+
+    /** Abate com Blade Storm devolve toda a munição e renova o tempo. */
+    public static void refillMode(ServerPlayer p) {
+        ModeState m = MODES.get(p.getUUID());
+        if (m == null || !m.def.b("refill", false)) return;
+        m.ammo = m.def.i("ammo", 1);
+        m.ticksLeft = (int) (m.def.d("duration", 15) * 20);
+        play((ServerLevel) p.level(), p.position(), "entity.player.levelup", 0.8f, 1.5f);
+        sync(p);
+    }
+
+    /** Dano de um tiro/projétil: cabeça = multiplicador ou morte instantânea; corpo = dano fixo ou fração da vida. */
+    static boolean shotDamage(ServerLevel level, ServerPlayer p, AbilityDef d, LivingEntity target, Vec3 point) {
+        Shot s = Shot.of(d);
+        boolean head = point.y >= target.getEyeY() - 0.25;
+        float body = s.bodyDmg() > 0 ? (float) s.bodyDmg()
+                : (float) Math.ceil(target.getMaxHealth() / (double) Math.max(1, s.bodyHits()));
+        float damage = head ? (s.headKill() ? 1000.0f : (float) (body * s.headMult())) : body;
+        hurt(level, p, target, damage);
+        boolean killed = target.isDeadOrDying();
+        if (!killed) addEffects(target, d.effects("effects"), 0);
+        play(level, point, head ? "entity.player.attack.crit" : "entity.arrow.hit_player", 1.0f, head ? 1.3f : 1.0f);
+        return killed;
     }
 
     // ------------------------------------------------------------------ ativação
@@ -175,52 +246,53 @@ public final class AgentLogic {
             ready[d.index] = now + d.cooldownTicks;
             addEffects(p, d.effects("self_fx"), 0);
             if (d.has("launch_up") || d.has("launch_fwd")) launch(p, d.d("launch_up", 0), d.d("launch_fwd", 0));
+            Fx3D.afterActivate(p, level, d, dirX, dirZ);
         }
         sync(p);
     }
 
     // ------------------------------------------------------------------ utilitários
 
-    private static SoundEvent sound(String path) {
+    static SoundEvent sound(String path) {
         return SOUNDS.computeIfAbsent(path,
                 k -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath("minecraft", k)));
     }
 
-    private static void play(ServerLevel level, Vec3 at, String path, float volume, float pitch) {
+    static void play(ServerLevel level, Vec3 at, String path, float volume, float pitch) {
         level.playSound(null, at.x, at.y, at.z, sound(path), SoundSource.PLAYERS, volume, pitch);
     }
 
-    private static ParticleOptions particle(AbilityDef d) {
+    static ParticleOptions particle(AbilityDef d) {
         return PARTICLES.computeIfAbsent(d.s("particle", "cloud"), k -> {
             Object type = BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft", k));
             return type instanceof SimpleParticleType simple ? simple : ParticleTypes.CLOUD;
         });
     }
 
-    private static void puff(ServerLevel level, ParticleOptions pt, Vec3 c, int count, double spread, double speed) {
+    static void puff(ServerLevel level, ParticleOptions pt, Vec3 c, int count, double spread, double speed) {
         level.sendParticles(pt, c.x, c.y, c.z, count, spread, spread, spread, speed);
     }
 
-    private static void ring(ServerLevel level, ParticleOptions pt, Vec3 c, double r, int n, double yOff) {
+    static void ring(ServerLevel level, ParticleOptions pt, Vec3 c, double r, int n, double yOff) {
         for (int i = 0; i < n; i++) {
             double a = 2 * Math.PI * i / n;
             level.sendParticles(pt, c.x + Math.cos(a) * r, c.y + yOff, c.z + Math.sin(a) * r, 1, 0, 0.05, 0, 0.01);
         }
     }
 
-    private static String model(AbilityDef d, String shape) {
+    static String model(AbilityDef d, String shape) {
         return AgentsMod.MOD_ID + ":fx/" + shape + "_" + d.agent.id;
     }
 
-    private static double smooth(double t) {
+    static double smooth(double t) {
         t = Math.max(0, Math.min(1, t));
         return t * t * (3 - 2 * t);
     }
 
-    private static String num(double v) { return String.format(Locale.ROOT, "%.3f", v); }
+    static String num(double v) { return String.format(Locale.ROOT, "%.3f", v); }
 
     /** Centro do modelo 3D para um modelo de raio 0.5 (escala = tamanho em blocos) apoiado no chão. */
-    private static Vec3 visualCenter(String shape, Vec3 ground, double size) {
+    static Vec3 visualCenter(String shape, Vec3 ground, double size) {
         return switch (shape) {
             case "orb" -> ground.add(0, size * 0.375, 0);
             case "dome", "disc", "ring", "blade_ring" -> ground.add(0, 0.15, 0);
@@ -229,7 +301,7 @@ public final class AgentLogic {
     }
 
     /** Ponto no chão onde o jogador mira (até 'range' blocos). */
-    private static Vec3 aimGround(ServerPlayer p, ServerLevel level, double range) {
+    static Vec3 aimGround(ServerPlayer p, ServerLevel level, double range) {
         Vec3 eye = p.getEyePosition();
         Vec3 look = p.getLookAngle();
         BlockHitResult hit = level.clip(new ClipContext(eye, eye.add(look.scale(range)),
@@ -243,27 +315,30 @@ public final class AgentLogic {
     }
 
     /** Inimigo: monstros hostis e, com PvP ligado, jogadores fora da sua equipe. */
-    private static boolean isFoe(ServerPlayer owner, LivingEntity e) {
+    static boolean isFoe(ServerPlayer owner, LivingEntity e) {
         if (e == owner || !e.isAlive() || e.isSpectator()) return false;
         if (e instanceof Player pl) {
             return !pl.isCreative() && owner.canHarmPlayer(pl);
         }
-        return e instanceof Enemy;
+        if (e instanceof Enemy) return true;
+        if (e instanceof AbstractVillager || e instanceof IronGolem || e instanceof ArmorStand) return false;
+        if (e instanceof TamableAnimal t && t.isOwnedBy(owner)) return false;
+        return e instanceof Mob;
     }
 
     /** Aliado: o próprio jogador e outros jogadores (todos, se o PvP está desligado; senão, só a equipe). */
-    private static boolean isAlly(ServerPlayer owner, LivingEntity e) {
+    static boolean isAlly(ServerPlayer owner, LivingEntity e) {
         if (!(e instanceof Player pl) || !e.isAlive() || e.isSpectator()) return false;
         return e == owner || !owner.canHarmPlayer(pl);
     }
 
-    private static List<LivingEntity> near(ServerLevel level, Vec3 c, double r) {
+    static List<LivingEntity> near(ServerLevel level, Vec3 c, double r) {
         List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, new AABB(c, c).inflate(r), e -> e.isAlive());
         list.removeIf(e -> e.getBoundingBox().getCenter().distanceToSqr(c) > r * r);
         return list;
     }
 
-    private static void addEffects(LivingEntity e, List<EffectSpec> list, int maxTicks) {
+    static void addEffects(LivingEntity e, List<EffectSpec> list, int maxTicks) {
         for (EffectSpec s : list) {
             Holder<MobEffect> holder = BuiltInRegistries.MOB_EFFECT
                     .get(Identifier.fromNamespaceAndPath("minecraft", s.id())).orElse(null);
@@ -273,14 +348,14 @@ public final class AgentLogic {
         }
     }
 
-    private static void hurt(ServerLevel level, ServerPlayer owner, LivingEntity target, float damage) {
+    static void hurt(ServerLevel level, ServerPlayer owner, LivingEntity target, float damage) {
         if (damage <= 0) return;
         DamageSource source = level.damageSources().indirectMagic(owner, owner); // ignora armadura; o crédito é do jogador
         target.invulnerableTime = 0; // sem isso, golpes seguidos seriam ignorados pelo tempo de invulnerabilidade
         target.hurtServer(level, source, damage);
     }
 
-    private static void launch(ServerPlayer p, double up, double fwd) {
+    static void launch(ServerPlayer p, double up, double fwd) {
         Vec3 v = p.getDeltaMovement();
         double yaw = Math.toRadians(p.getYRot());
         p.setDeltaMovement(v.x + -Math.sin(yaw) * fwd, up > 0 ? up : v.y, v.z + Math.cos(yaw) * fwd);
@@ -292,7 +367,7 @@ public final class AgentLogic {
      * Aplica o "pulso" de uma habilidade de área: inimigos recebem dano/efeitos/empurrão; aliados e o dono recebem cura/efeitos.
      * effectTicks > 0 limita a duração dos efeitos (zonas renovam o efeito a cada pulso).
      */
-    private static void pulse(ServerLevel level, ServerPlayer owner, AbilityDef d, Vec3 center, double radius,
+    static void pulse(ServerLevel level, ServerPlayer owner, AbilityDef d, Vec3 center, double radius,
                               double damage, double heal, int effectTicks) {
         List<EffectSpec> foeFx = d.effects("effects");
         List<EffectSpec> allyFx = d.effects("ally_effects");
@@ -460,6 +535,7 @@ public final class AgentLogic {
     // ------------------------------------------------------------------ ZONE (área que dura)
 
     private static boolean zone(ServerPlayer p, ServerLevel level, AbilityDef d) {
+        if (d.s("vfx", "").equals("smoke")) return Fx3D.cloudburst(p, level, d);
         boolean self = d.s("center", "self").equals("self");
         Vec3 anchor = self ? p.position() : aimGround(p, level, d.d("range", 20));
         boolean follow = d.b("follow", self);
@@ -590,7 +666,7 @@ public final class AgentLogic {
         Vec3 stuck = impact.subtract(look.scale(0.35));
         int ticks = (int) Math.max(1, Math.min(40, Math.ceil(start.distanceTo(stuck) / 3.5)));
         // quaternion do caminho mais curto que leva o eixo +Y (comprimento do modelo) até a direção do voo
-        double cx = look.z, cy = 0.0, cz = -look.x, cw = 1.0 + look.y;
+        double cx = -look.z, cy = 0.0, cz = look.x, cw = 1.0 + look.y;
         double norm = Math.sqrt(cx * cx + cy * cy + cz * cz + cw * cw);
         if (norm < 1e-6) {
             cx = 1;
@@ -627,6 +703,12 @@ public final class AgentLogic {
 
     private static boolean mode(ServerPlayer p, ServerLevel level, AbilityDef d) {
         MODES.put(p.getUUID(), new ModeState(d));
+        if (d.s("vfx", "").equals("knives")) {
+            Fx3D.startKnives(p, level, d);
+            play(level, p.position(), "block.beacon.activate", 1.0f, 1.4f);
+            play(level, p.position(), "item.armor.equip_netherite", 0.8f, 1.6f);
+            return true;
+        }
         play(level, p.position(), d.s("sound", "block.beacon.activate"), 1.0f, 1.4f);
         ring(level, particle(d), p.position(), 1.4, 20, 1.0);
         if (d.b("ring", false)) {
@@ -658,13 +740,18 @@ public final class AgentLogic {
         m.ammo--;
         m.cooldown = m.def.i("shot_cd", 5);
         ServerLevel level = (ServerLevel) p.level();
-        boolean killed = fire(p, level, m.def, Shot.of(m.def));
-        if (killed && m.def.b("refill", false)) {
-            m.ammo = m.def.i("ammo", 1);
-            m.ticksLeft = (int) (m.def.d("duration", 15) * 20);
-            play(level, p.position(), "entity.player.levelup", 0.8f, 1.5f);
-        } else if (m.ammo <= 0) {
-            MODES.remove(p.getUUID());
+        if (m.def.s("vfx", "").equals("knives")) {
+            Fx3D.throwKnife(p, level, m.def); // a faca voa de verdade; o abate (refill) é resolvido ao acertar
+            if (m.ammo <= 0) m.ticksLeft = Math.min(m.ticksLeft, 60); // tempo para as facas no ar acertarem
+        } else {
+            boolean killed = fire(p, level, m.def, Shot.of(m.def));
+            if (killed && m.def.b("refill", false)) {
+                m.ammo = m.def.i("ammo", 1);
+                m.ticksLeft = (int) (m.def.d("duration", 15) * 20);
+                play(level, p.position(), "entity.player.levelup", 0.8f, 1.5f);
+            } else if (m.ammo <= 0) {
+                MODES.remove(p.getUUID());
+            }
         }
         sync(p);
     }
@@ -690,7 +777,7 @@ public final class AgentLogic {
 
     // ------------------------------------------------------------------ efeitos com duração
 
-    private interface Effect {
+    interface Effect {
         /** @return false quando o efeito terminou e deve ser removido. */
         boolean tick(MinecraftServer server);
     }

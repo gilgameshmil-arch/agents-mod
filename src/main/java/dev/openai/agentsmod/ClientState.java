@@ -16,7 +16,25 @@ public final class ClientState {
     private static long clientTicks = 0;
     private static int ammo = 0;
 
-    public static void tick() { clientTicks++; }
+    private static final long[] PRESSED_AT = {-100, -100, -100, -100};
+    private static final long[] FLASH_AT = {-100, -100, -100, -100};
+    private static final int[] LAST_REMAINING = new int[4];
+
+    public static long ticks() { return clientTicks; }
+
+    public static long pressedAt(int slot) { return PRESSED_AT[slot]; }
+
+    public static long flashAt(int slot) { return FLASH_AT[slot]; }
+
+    public static void tick() {
+        clientTicks++;
+        AgentDef a = agent();
+        for (int i = 0; i < 4; i++) {
+            int rem = a != null && isUnlocked(a.abilities[i]) ? remainingTicks(i) : 0;
+            if (LAST_REMAINING[i] > 0 && rem == 0) FLASH_AT[i] = clientTicks; // recarga acabou: brilho
+            LAST_REMAINING[i] = rem;
+        }
+    }
 
     public static void apply(Net.StateS2C s) {
         selected = s.selected();
@@ -65,5 +83,6 @@ public final class ClientState {
     /** Recarga "prevista" no cliente no instante da tecla; o servidor corrige no próximo StateS2C. */
     public static void startCooldown(AbilityDef d) {
         COOLDOWN_END[d.slot] = clientTicks + d.cooldownTicks;
+        PRESSED_AT[d.slot] = clientTicks;
     }
 }

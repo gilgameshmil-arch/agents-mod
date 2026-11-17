@@ -30,7 +30,6 @@ public class LoadoutScreen extends Screen {
     private int scroll = 0;
     private int gridX, gridY, gridW, gridH, cols, detailX, detailW, panelX, panelY, panelW, panelH;
     private int equipX, equipY, equipW = 110, equipH = 18;
-    private int unequipX, unequipW = 92;
 
     public LoadoutScreen() {
         super(Component.translatable("gui.agentsmod.loadout.title"));
@@ -53,7 +52,6 @@ public class LoadoutScreen extends Screen {
         detailX = panelX + panelW - detailW - PAD;
         equipX = detailX;
         equipY = panelY + panelH - PAD - equipH;
-        unequipX = equipX + equipW + 6;
         clampScroll();
     }
 
@@ -81,19 +79,21 @@ public class LoadoutScreen extends Screen {
         int hit = cardAt(mx, my);
         if (hit >= 0) {
             view = hit;
-            if (doubleClick) ClientPlayNetworking.send(new Net.SelectC2S(hit));
+            if (doubleClick && canEquip(Defs.agent(hit))) ClientPlayNetworking.send(new Net.SelectC2S(hit));
             return true;
         }
         AgentDef viewed = Defs.agent(view);
-        if (viewed != null && inside(mx, my, equipX, equipY, equipW, equipH)) {
+        if (viewed != null && inside(mx, my, equipX, equipY, equipW, equipH) && canEquip(viewed)) {
             ClientPlayNetworking.send(new Net.SelectC2S(viewed.index));
             return true;
         }
-        if (inside(mx, my, unequipX, equipY, unequipW, equipH)) {
-            ClientPlayNetworking.send(new Net.SelectC2S(-1));
-            return true;
-        }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    /** Só dá para ativar um agente quando não há agente ativo (após o Contrato) ou se ele já é o ativo. */
+    private static boolean canEquip(AgentDef a) {
+        AgentDef cur = ClientState.agent();
+        return a != null && (cur == null || cur.index == a.index);
     }
 
     private static boolean inside(double mx, double my, int x, int y, int w, int h) {
@@ -219,14 +219,19 @@ public class LoadoutScreen extends Screen {
 
         AgentDef equipped = ClientState.agent();
         boolean isEquipped = equipped != null && equipped.index == a.index;
-        boolean hoverEq = inside(mouseX, mouseY, equipX, equipY, equipW, equipH);
-        g.fill(equipX, equipY, equipX + equipW, equipY + equipH, isEquipped ? 0xFF1F5E2B : hoverEq ? AgentsHud.shade(a.color, 0.85f) : AgentsHud.shade(a.color, 0.6f));
+        boolean can = canEquip(a);
+        boolean hoverEq = can && inside(mouseX, mouseY, equipX, equipY, equipW, equipH);
+        int fill = isEquipped ? 0xFF1F5E2B : !can ? 0xFF262A33 : hoverEq ? AgentsHud.shade(a.color, 0.85f) : AgentsHud.shade(a.color, 0.6f);
+        g.fill(equipX, equipY, equipX + equipW, equipY + equipH, fill);
         Component eq = Component.translatable(isEquipped ? "gui.agentsmod.equipped" : "gui.agentsmod.equip");
-        g.drawString(this.font, eq, equipX + (equipW - this.font.width(eq)) / 2, equipY + 5, 0xFFFFFFFF, false);
-        boolean hoverUn = inside(mouseX, mouseY, unequipX, equipY, unequipW, equipH);
-        g.fill(unequipX, equipY, unequipX + unequipW, equipY + equipH, hoverUn ? 0xFF4A2A2A : 0xFF2A1F1F);
-        Component un = Component.translatable("gui.agentsmod.unequip");
-        g.drawString(this.font, un, unequipX + (unequipW - this.font.width(un)) / 2, equipY + 5, 0xFFD9B0B0, false);
+        g.drawString(this.font, eq, equipX + (equipW - this.font.width(eq)) / 2, equipY + 5, can ? 0xFFFFFFFF : 0xFF6E7480, false);
+        if (!can) {
+            Component need = Component.translatable("gui.agentsmod.need_contract");
+            g.drawString(this.font, need, equipX + equipW + 8, equipY + 5, 0xFFD9B070, false);
+        } else if (equipped == null) {
+            Component ready = Component.translatable("gui.agentsmod.swap_ready");
+            g.drawString(this.font, ready, equipX + equipW + 8, equipY + 5, 0xFF7CFF8A, false);
+        }
     }
 
     private AbilityDef hoverDesc;

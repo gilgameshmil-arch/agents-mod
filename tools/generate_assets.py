@@ -14,8 +14,12 @@ import math
 import os
 import re
 import shutil
+import sys
 
 from PIL import Image, ImageDraw
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import jett_models
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 RES = os.path.join(ROOT, "src", "main", "resources")
@@ -43,11 +47,11 @@ def A(slot, name, cd, type_, **p):
 # ----------------------------------------------------------------------------------------------------------------------
 AGENTS = [
     dict(id="jett", name="Jett", role="duelist", color=0x7FE0FF, sig="feather", particle="cloud", abilities=[
-        A("C", "Tailwind", 6, "DASH", speed=2.4, ticks=5),
-        A("Q", "Updraft", 8, "LEAP", up=1.05, fwd=0.0),
-        A("E", "Cloudburst", 15, "ZONE", center="target", range=24, throw=True, radius=2.0, duration=7.5, shape="orb"),
+        A("C", "Tailwind", 6, "DASH", speed=2.4, ticks=5, vfx="tailwind"),
+        A("Q", "Updraft", 8, "LEAP", up=1.05, fwd=0.0, vfx="updraft"),
+        A("E", "Cloudburst", 15, "ZONE", center="target", range=24, throw=True, radius=3.2, duration=7.5, proj="canister", vfx="smoke"),
         A("X", "Blade Storm", 60, "MODE", ammo=5, duration=25, body_hits=3, head_kill=True, range=80, refill=True,
-          shot_cd=5, ring=True, shape="blade"),
+          shot_cd=5, vfx="knives", proj="knife", proj_speed=2.6),
     ]),
     dict(id="phoenix", name="Phoenix", role="duelist", color=0xFF7A2F, sig="blaze_powder", particle="flame", abilities=[
         A("C", "Blaze", 18, "WALL", along=True, width=9, height=2, duration=6, block="orange_stained_glass", damage=4, ignite=3),
@@ -650,6 +654,31 @@ def describe(ab, lang):
     return " ".join(out)
 
 
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Contrato de Reatribuição (troca de agente)
+# ----------------------------------------------------------------------------------------------------------------------
+def emit_contract():
+    img = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([5, 2, 26, 29], radius=2, fill=(236, 226, 200, 255), outline=(120, 96, 60, 255))
+    d.rectangle([5, 2, 26, 6], fill=(214, 60, 74, 255))
+    for i in range(5):
+        d.line([(9, 11 + i * 3), (22 - (i % 2) * 4, 11 + i * 3)], fill=(90, 80, 70, 255))
+    d.ellipse([17, 20, 27, 30], fill=(214, 60, 74, 255), outline=(255, 214, 120, 255))
+    d.line([(20, 25), (24, 25)], fill=(255, 255, 255, 255))
+    d.line([(22, 23), (22, 27)], fill=(255, 255, 255, 255))
+    out = os.path.join(RES, "assets", MOD, "textures", "item", "reassignment_contract.png")
+    img.save(out)
+    write_json(os.path.join(RES, "assets", MOD, "models", "item", "reassignment_contract.json"),
+               {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/reassignment_contract"}})
+    write_json(os.path.join(RES, "assets", MOD, "items", "reassignment_contract.json"),
+               {"model": {"type": "minecraft:model", "model": f"{MOD}:item/reassignment_contract"}})
+    write_json(os.path.join(RES, "data", MOD, "recipe", "reassignment_contract.json"), {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": ["minecraft:paper", "minecraft:ender_pearl", "minecraft:gold_ingot", "minecraft:redstone"],
+        "result": {"id": f"{MOD}:reassignment_contract", "count": 1}})
+
 def emit_lang():
     pt = {
         "itemGroup.agentsmod.main": "Agents Mod",
@@ -665,11 +694,19 @@ def emit_lang():
         "hud.agentsmod.no_agent": "Sem agente (V)",
         "gui.agentsmod.loadout.title": "LOADOUT DE AGENTES",
         "gui.agentsmod.equip": "Equipar", "gui.agentsmod.equipped": "EQUIPADO",
-        "gui.agentsmod.unequip": "Desligar agente", "gui.agentsmod.close": "Fechar",
+        "gui.agentsmod.close": "Fechar",
         "gui.agentsmod.unlocked": "DESBLOQUEADA", "gui.agentsmod.locked": "BLOQUEADA",
         "gui.agentsmod.recipe": "Receita (sem forma):", "gui.agentsmod.cooldown": "Recarga: %ss",
         "gui.agentsmod.ultimate": "ULTIMATE", "gui.agentsmod.hint": "Passe o mouse nas habilidades para ver os detalhes",
         "gui.agentsmod.owned": "%s/4 habilidades",
+        "item.agentsmod.reassignment_contract": "Contrato de Reatribuição",
+        "message.agentsmod.contract_used": "Contrato usado: agente retirado. Escolha o novo agente.",
+        "message.agentsmod.contract_none": "Você não tem agente ativo. Use um item de desbloqueio ou abra o loadout (V).",
+        "message.agentsmod.wrong_agent": "Esta habilidade é de %s. Ative esse agente primeiro (Contrato de Reatribuição).",
+        "message.agentsmod.need_contract": "Para trocar de agente, use um Contrato de Reatribuição.",
+        "gui.agentsmod.swap_ready": "TROCA LIBERADA",
+        "gui.agentsmod.need_contract": "Requer Contrato de Reatribuição",
+        "hud.agentsmod.knives": "FACAS",
     }
     en = {
         "itemGroup.agentsmod.main": "Agents Mod",
@@ -685,11 +722,19 @@ def emit_lang():
         "hud.agentsmod.no_agent": "No agent (V)",
         "gui.agentsmod.loadout.title": "AGENT LOADOUT",
         "gui.agentsmod.equip": "Equip", "gui.agentsmod.equipped": "EQUIPPED",
-        "gui.agentsmod.unequip": "Disable agent", "gui.agentsmod.close": "Close",
+        "gui.agentsmod.close": "Close",
         "gui.agentsmod.unlocked": "UNLOCKED", "gui.agentsmod.locked": "LOCKED",
         "gui.agentsmod.recipe": "Recipe (shapeless):", "gui.agentsmod.cooldown": "Cooldown: %ss",
         "gui.agentsmod.ultimate": "ULTIMATE", "gui.agentsmod.hint": "Hover an ability to see its details",
         "gui.agentsmod.owned": "%s/4 abilities",
+        "item.agentsmod.reassignment_contract": "Reassignment Contract",
+        "message.agentsmod.contract_used": "Contract used: agent retired. Pick a new agent.",
+        "message.agentsmod.contract_none": "You have no active agent. Use an unlock item or open the loadout (V).",
+        "message.agentsmod.wrong_agent": "This ability belongs to %s. Activate that agent first (Reassignment Contract).",
+        "message.agentsmod.need_contract": "Use a Reassignment Contract to switch agents.",
+        "gui.agentsmod.swap_ready": "SWAP READY",
+        "gui.agentsmod.need_contract": "Requires Reassignment Contract",
+        "hud.agentsmod.knives": "KNIVES",
     }
     for r, (rp, re_) in ROLES.items():
         pt[f"role.agentsmod.{r}"] = rp
@@ -718,6 +763,8 @@ def main():
     emit_fx()
     emit_icons()
     emit_items_and_recipes()
+    jett_models.emit(RES, AGENTS)
+    emit_contract()
     emit_lang()
     n = sum(len(a["abilities"]) for a in AGENTS)
     print(f"OK: {len(AGENTS)} agentes, {n} habilidades")

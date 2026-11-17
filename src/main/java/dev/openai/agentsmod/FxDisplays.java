@@ -115,6 +115,31 @@ public final class FxDisplays {
         run(server, level, "tp " + id + " " + f(x) + " " + f(y) + " " + f(z));
     }
 
+    /** Define transformação completa (rotação esquerda/direita em quaternion xyzw, escala por eixo) com interpolação. */
+    public static void set(MinecraftServer server, ServerLevel level, UUID id, double[] lq, double[] rq,
+                           double sx, double sy, double sz, int ticks) {
+        if (id == null) return;
+        run(server, level, "data merge entity " + id + " {start_interpolation:0,interpolation_duration:" + ticks
+                + ",transformation:{left_rotation:[" + ff(lq[0]) + "," + ff(lq[1]) + "," + ff(lq[2]) + "," + ff(lq[3])
+                + "],right_rotation:[" + ff(rq[0]) + "," + ff(rq[1]) + "," + ff(rq[2]) + "," + ff(rq[3])
+                + "],translation:[0f,0f,0f],scale:[" + ff(sx) + "," + ff(sy) + "," + ff(sz) + "]}}");
+    }
+
+    /** Move e gira a entidade (yaw/pitch em graus); a interpolação de movimento vem do teleport_duration do spawn. */
+    public static void tpRot(MinecraftServer server, ServerLevel level, UUID id, double x, double y, double z,
+                             float yaw, float pitch) {
+        if (id == null) return;
+        run(server, level, "tp " + id + " " + f(x) + " " + f(y) + " " + f(z) + " " + f(yaw) + " " + f(pitch));
+    }
+
+    /** Quaternion de rotação (eixo unitário, ângulo em rad) como {x,y,z,w}. */
+    public static double[] quat(double ax, double ay, double az, double angle) {
+        double len = Math.sqrt(ax * ax + ay * ay + az * az);
+        if (len < 1e-9) return new double[] {0, 0, 0, 1};
+        double s = Math.sin(angle / 2) / len;
+        return new double[] {ax * s, ay * s, az * s, Math.cos(angle / 2)};
+    }
+
     public static void kill(ServerLevel level, UUID id) {
         if (id == null) return;
         Entity e = level.getEntity(id);
