@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bone_meal",
+    "minecraft:bone_meal",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:clove_pick_me_up",
+    "count": 1
+  }
+}

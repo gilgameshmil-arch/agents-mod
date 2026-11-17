@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:prismarine_shard",
+    "minecraft:prismarine_shard",
+    "minecraft:emerald",
+    "minecraft:lapis_lazuli"
+  ],
+  "result": {
+    "id": "agentsmod:harbor_high_tide",
+    "count": 1
+  }
+}

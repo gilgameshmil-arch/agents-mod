@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:gunpowder",
+    "minecraft:gunpowder",
+    "minecraft:emerald",
+    "minecraft:lapis_lazuli"
+  ],
+  "result": {
+    "id": "agentsmod:brimstone_sky_smoke",
+    "count": 1
+  }
+}

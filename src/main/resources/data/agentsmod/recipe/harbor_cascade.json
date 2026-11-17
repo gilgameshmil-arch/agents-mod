@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:prismarine_shard",
+    "minecraft:prismarine_shard",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:harbor_cascade",
+    "count": 1
+  }
+}

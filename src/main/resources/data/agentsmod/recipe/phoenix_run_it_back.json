@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "minecraft:diamond",
+    "minecraft:diamond",
+    "minecraft:ender_eye"
+  ],
+  "result": {
+    "id": "agentsmod:phoenix_run_it_back",
+    "count": 1
+  }
+}

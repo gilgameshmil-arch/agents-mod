@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:copper_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:lapis_lazuli"
+  ],
+  "result": {
+    "id": "agentsmod:kayo_frag_ment",
+    "count": 1
+  }
+}

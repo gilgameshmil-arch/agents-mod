@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:vine",
+    "minecraft:vine",
+    "minecraft:vine",
+    "minecraft:diamond",
+    "minecraft:diamond",
+    "minecraft:ender_eye"
+  ],
+  "result": {
+    "id": "agentsmod:vyse_steel_garden",
+    "count": 1
+  }
+}

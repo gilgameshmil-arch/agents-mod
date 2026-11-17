@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glistering_melon_slice",
+    "minecraft:glistering_melon_slice",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:sage_slow_orb",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:copper_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:diamond",
+    "minecraft:diamond",
+    "minecraft:ender_eye"
+  ],
+  "result": {
+    "id": "agentsmod:kayo_null_cmd",
+    "count": 1
+  }
+}

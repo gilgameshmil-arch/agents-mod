@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:fire_charge",
+    "minecraft:fire_charge",
+    "minecraft:fire_charge",
+    "minecraft:diamond",
+    "minecraft:diamond",
+    "minecraft:ender_eye"
+  ],
+  "result": {
+    "id": "agentsmod:raze_showstopper",
+    "count": 1
+  }
+}

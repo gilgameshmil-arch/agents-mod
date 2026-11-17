@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:ender_pearl",
+    "minecraft:ender_pearl",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:omen_shrouded_step",
+    "count": 1
+  }
+}

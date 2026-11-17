@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:redstone_torch",
+    "minecraft:redstone_torch",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:killjoy_nanoswarm",
+    "count": 1
+  }
+}

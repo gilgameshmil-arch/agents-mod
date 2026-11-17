@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "agentsmod:item/vyse_arc_rose"
+  }
+}

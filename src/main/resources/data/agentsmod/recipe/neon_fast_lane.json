@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:sugar",
+    "minecraft:sugar",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:neon_fast_lane",
+    "count": 1
+  }
+}

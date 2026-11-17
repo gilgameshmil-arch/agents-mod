@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:phoenix_blaze",
+    "count": 1
+  }
+}

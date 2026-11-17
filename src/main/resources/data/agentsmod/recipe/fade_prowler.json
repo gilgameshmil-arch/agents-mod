@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:ink_sac",
+    "minecraft:ink_sac",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:fade_prowler",
+    "count": 1
+  }
+}

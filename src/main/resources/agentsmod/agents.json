@@ -1,0 +1,4502 @@
+{
+  "agents": [
+    {
+      "id": "jett",
+      "role": "duelist",
+      "color": 8380671,
+      "name": "Jett",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Tailwind",
+          "cd": 6,
+          "type": "DASH",
+          "speed": 2.4,
+          "ticks": 5,
+          "id": "jett_tailwind",
+          "cd_ticks": 120,
+          "particle": "cloud",
+          "sound": "entity.breeze.slide",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:feather",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Updraft",
+          "cd": 8,
+          "type": "LEAP",
+          "up": 1.05,
+          "fwd": 0.0,
+          "id": "jett_updraft",
+          "cd_ticks": 160,
+          "particle": "cloud",
+          "sound": "entity.wind_charge.wind_burst",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:feather",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Cloudburst",
+          "cd": 15,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 2.0,
+          "duration": 7.5,
+          "shape": "orb",
+          "id": "jett_cloudburst",
+          "cd_ticks": 300,
+          "particle": "cloud",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:feather",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Blade Storm",
+          "cd": 60,
+          "type": "MODE",
+          "ammo": 5,
+          "duration": 25,
+          "body_hits": 3,
+          "head_kill": true,
+          "range": 80,
+          "refill": true,
+          "shot_cd": 5,
+          "ring": true,
+          "shape": "blade",
+          "id": "jett_blade_storm",
+          "cd_ticks": 1200,
+          "particle": "cloud",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:feather",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phoenix",
+      "role": "duelist",
+      "color": 16742959,
+      "name": "Phoenix",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Blaze",
+          "cd": 18,
+          "type": "WALL",
+          "along": true,
+          "width": 9,
+          "height": 2,
+          "duration": 6,
+          "block": "orange_stained_glass",
+          "damage": 4,
+          "ignite": 3,
+          "id": "phoenix_blaze",
+          "cd_ticks": 360,
+          "particle": "flame",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:blaze_powder",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Curveball",
+          "cd": 14,
+          "type": "AREA",
+          "center": "target",
+          "range": 20,
+          "throw": true,
+          "facing": true,
+          "radius": 9,
+          "effects": [
+            [
+              "blindness",
+              2.0,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "flash",
+          "id": "phoenix_curveball",
+          "cd_ticks": 280,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:blaze_powder",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Hot Hands",
+          "cd": 25,
+          "type": "ZONE",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 3.5,
+          "duration": 6,
+          "damage": 3,
+          "ignite": 2,
+          "heal": 3,
+          "shape": "disc",
+          "id": "phoenix_hot_hands",
+          "cd_ticks": 500,
+          "particle": "flame",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:blaze_powder",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Run It Back",
+          "cd": 90,
+          "type": "AREA",
+          "center": "self",
+          "radius": 3,
+          "self_fx": [
+            [
+              "strength",
+              15,
+              0
+            ],
+            [
+              "resistance",
+              15,
+              1
+            ],
+            [
+              "regeneration",
+              15,
+              1
+            ],
+            [
+              "speed",
+              15,
+              1
+            ]
+          ],
+          "shape": "ring",
+          "id": "phoenix_run_it_back",
+          "cd_ticks": 1800,
+          "particle": "flame",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:blaze_powder",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sage",
+      "role": "sentinel",
+      "color": 5104577,
+      "name": "Sage",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Slow Orb",
+          "cd": 18,
+          "type": "ZONE",
+          "center": "target",
+          "range": 20,
+          "throw": true,
+          "radius": 4,
+          "duration": 5,
+          "effects": [
+            [
+              "slowness",
+              2,
+              2
+            ]
+          ],
+          "shape": "disc",
+          "particle": "snowflake",
+          "id": "sage_slow_orb",
+          "cd_ticks": 360,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:glistering_melon_slice",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Healing Orb",
+          "cd": 20,
+          "type": "AREA",
+          "center": "self",
+          "radius": 6,
+          "heal": 12,
+          "ally_effects": [
+            [
+              "regeneration",
+              4,
+              1
+            ]
+          ],
+          "shape": "cross",
+          "particle": "heart",
+          "id": "sage_healing_orb",
+          "cd_ticks": 400,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:glistering_melon_slice",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Barrier Orb",
+          "cd": 30,
+          "type": "WALL",
+          "range": 12,
+          "along": false,
+          "width": 5,
+          "height": 4,
+          "duration": 20,
+          "block": "packed_ice",
+          "particle": "snowflake",
+          "id": "sage_barrier_orb",
+          "cd_ticks": 600,
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:glistering_melon_slice",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Resurrection",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 14,
+          "heal": 40,
+          "ally_effects": [
+            [
+              "regeneration",
+              10,
+              2
+            ],
+            [
+              "absorption",
+              10,
+              1
+            ],
+            [
+              "resistance",
+              6,
+              1
+            ]
+          ],
+          "shape": "star",
+          "particle": "heart",
+          "id": "sage_resurrection",
+          "cd_ticks": 2000,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:glistering_melon_slice",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "viper",
+      "role": "controller",
+      "color": 3920239,
+      "name": "Viper",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Snake Bite",
+          "cd": 16,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 3,
+          "duration": 6,
+          "damage": 4,
+          "effects": [
+            [
+              "weakness",
+              3,
+              0
+            ]
+          ],
+          "shape": "disc",
+          "id": "viper_snake_bite",
+          "cd_ticks": 320,
+          "particle": "witch",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:fermented_spider_eye",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Poison Cloud",
+          "cd": 18,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 4,
+          "duration": 12,
+          "shape": "orb",
+          "id": "viper_poison_cloud",
+          "cd_ticks": 360,
+          "particle": "witch",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:fermented_spider_eye",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Toxic Screen",
+          "cd": 30,
+          "type": "WALL",
+          "along": true,
+          "width": 11,
+          "height": 3,
+          "duration": 14,
+          "block": "lime_stained_glass",
+          "damage": 2,
+          "id": "viper_toxic_screen",
+          "cd_ticks": 600,
+          "particle": "witch",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:fermented_spider_eye",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Viper's Pit",
+          "cd": 100,
+          "type": "ZONE",
+          "center": "self",
+          "radius": 10,
+          "duration": 14,
+          "follow": false,
+          "damage": 3,
+          "effects": [
+            [
+              "weakness",
+              3,
+              1
+            ],
+            [
+              "slowness",
+              3,
+              0
+            ]
+          ],
+          "shape": "dome",
+          "id": "viper_viper_s_pit",
+          "cd_ticks": 2000,
+          "particle": "witch",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:fermented_spider_eye",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brimstone",
+      "role": "controller",
+      "color": 14715452,
+      "name": "Brimstone",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Stim Beacon",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 5,
+          "duration": 8,
+          "ally_effects": [
+            [
+              "speed",
+              3,
+              1
+            ],
+            [
+              "haste",
+              3,
+              1
+            ]
+          ],
+          "shape": "disc",
+          "particle": "end_rod",
+          "id": "brimstone_stim_beacon",
+          "cd_ticks": 400,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gunpowder",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Incendiary",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 26,
+          "throw": true,
+          "radius": 4,
+          "duration": 7,
+          "damage": 4,
+          "ignite": 2,
+          "shape": "disc",
+          "id": "brimstone_incendiary",
+          "cd_ticks": 400,
+          "particle": "flame",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gunpowder",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Sky Smoke",
+          "cd": 28,
+          "type": "ZONE",
+          "center": "target",
+          "range": 40,
+          "throw": false,
+          "radius": 3,
+          "duration": 12,
+          "shape": "orb",
+          "particle": "cloud",
+          "id": "brimstone_sky_smoke",
+          "cd_ticks": 560,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gunpowder",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Orbital Strike",
+          "cd": 100,
+          "type": "ZONE",
+          "center": "target",
+          "range": 60,
+          "throw": false,
+          "radius": 5,
+          "duration": 6,
+          "damage": 9,
+          "ignite": 3,
+          "shape": "pillar",
+          "id": "brimstone_orbital_strike",
+          "cd_ticks": 2000,
+          "particle": "flame",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gunpowder",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "omen",
+      "role": "controller",
+      "color": 8080895,
+      "name": "Omen",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Shrouded Step",
+          "cd": 12,
+          "type": "BLINK",
+          "range": 12,
+          "id": "omen_shrouded_step",
+          "cd_ticks": 240,
+          "particle": "portal",
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:ender_pearl",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Paranoia",
+          "cd": 24,
+          "type": "AREA",
+          "center": "target",
+          "range": 14,
+          "throw": false,
+          "radius": 6,
+          "effects": [
+            [
+              "blindness",
+              3,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "smoke",
+          "id": "omen_paranoia",
+          "cd_ticks": 480,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:ender_pearl",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Dark Cover",
+          "cd": 28,
+          "type": "ZONE",
+          "center": "target",
+          "range": 28,
+          "throw": true,
+          "radius": 3,
+          "duration": 10,
+          "shape": "orb",
+          "particle": "large_smoke",
+          "id": "omen_dark_cover",
+          "cd_ticks": 560,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:ender_pearl",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "From the Shadows",
+          "cd": 100,
+          "type": "BLINK",
+          "range": 60,
+          "self_fx": [
+            [
+              "invisibility",
+              3,
+              0
+            ]
+          ],
+          "id": "omen_from_the_shadows",
+          "cd_ticks": 2000,
+          "particle": "portal",
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:ender_pearl",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "killjoy",
+      "role": "sentinel",
+      "color": 15914042,
+      "name": "Killjoy",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Nanoswarm",
+          "cd": 18,
+          "type": "ZONE",
+          "center": "target",
+          "range": 20,
+          "throw": true,
+          "radius": 3,
+          "duration": 6,
+          "damage": 6,
+          "shape": "disc",
+          "id": "killjoy_nanoswarm",
+          "cd_ticks": 360,
+          "particle": "electric_spark",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:redstone_torch",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Alarmbot",
+          "cd": 22,
+          "type": "ZONE",
+          "center": "target",
+          "range": 20,
+          "throw": false,
+          "radius": 8,
+          "duration": 12,
+          "effects": [
+            [
+              "glowing",
+              3,
+              0
+            ],
+            [
+              "weakness",
+              3,
+              1
+            ]
+          ],
+          "size": 1.0,
+          "shape": "cube",
+          "id": "killjoy_alarmbot",
+          "cd_ticks": 440,
+          "particle": "electric_spark",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:redstone_torch",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Turret",
+          "cd": 30,
+          "type": "ZONE",
+          "center": "target",
+          "range": 18,
+          "throw": false,
+          "radius": 14,
+          "duration": 20,
+          "damage": 3,
+          "effects": [
+            [
+              "slowness",
+              2,
+              0
+            ]
+          ],
+          "size": 1.2,
+          "shape": "cube",
+          "id": "killjoy_turret",
+          "cd_ticks": 600,
+          "particle": "electric_spark",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:redstone_torch",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Lockdown",
+          "cd": 110,
+          "type": "AREA",
+          "center": "self",
+          "radius": 14,
+          "effects": [
+            [
+              "slowness",
+              5,
+              4
+            ],
+            [
+              "weakness",
+              5,
+              1
+            ],
+            [
+              "mining_fatigue",
+              5,
+              2
+            ]
+          ],
+          "shape": "dome",
+          "id": "killjoy_lockdown",
+          "cd_ticks": 2200,
+          "particle": "electric_spark",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:redstone_torch",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cypher",
+      "role": "sentinel",
+      "color": 15132390,
+      "name": "Cypher",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Cyber Cage",
+          "cd": 18,
+          "type": "ZONE",
+          "center": "target",
+          "range": 18,
+          "throw": true,
+          "radius": 3,
+          "duration": 7,
+          "effects": [
+            [
+              "slowness",
+              2,
+              3
+            ]
+          ],
+          "shape": "cube",
+          "id": "cypher_cyber_cage",
+          "cd_ticks": 360,
+          "particle": "crit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:tripwire_hook",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Spycam",
+          "cd": 25,
+          "type": "ZONE",
+          "center": "target",
+          "range": 30,
+          "throw": false,
+          "radius": 16,
+          "duration": 20,
+          "effects": [
+            [
+              "glowing",
+              2,
+              0
+            ]
+          ],
+          "size": 0.8,
+          "shape": "cube",
+          "id": "cypher_spycam",
+          "cd_ticks": 500,
+          "particle": "crit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:tripwire_hook",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Trapwire",
+          "cd": 25,
+          "type": "WALL",
+          "range": 14,
+          "along": false,
+          "width": 5,
+          "height": 1,
+          "duration": 30,
+          "block": "cobweb",
+          "effects": [
+            [
+              "glowing",
+              6,
+              0
+            ],
+            [
+              "slowness",
+              2,
+              1
+            ]
+          ],
+          "id": "cypher_trapwire",
+          "cd_ticks": 500,
+          "particle": "crit",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:tripwire_hook",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Neural Theft",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 40,
+          "effects": [
+            [
+              "glowing",
+              6,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "particle": "enchanted_hit",
+          "id": "cypher_neural_theft",
+          "cd_ticks": 2000,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:tripwire_hook",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sova",
+      "role": "initiator",
+      "color": 5078271,
+      "name": "Sova",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Owl Drone",
+          "cd": 30,
+          "type": "ZONE",
+          "center": "target",
+          "range": 35,
+          "throw": false,
+          "radius": 10,
+          "duration": 10,
+          "effects": [
+            [
+              "glowing",
+              2,
+              0
+            ]
+          ],
+          "size": 0.9,
+          "shape": "cube",
+          "id": "sova_owl_drone",
+          "cd_ticks": 600,
+          "particle": "enchanted_hit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:arrow",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Shock Bolt",
+          "cd": 14,
+          "type": "BEAM",
+          "range": 60,
+          "damage": 4,
+          "aoe": 3,
+          "aoe_damage": 6,
+          "shape": "bolt",
+          "id": "sova_shock_bolt",
+          "cd_ticks": 280,
+          "particle": "enchanted_hit",
+          "sound": "entity.arrow.shoot",
+          "recipe": [
+            [
+              "minecraft:arrow",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Recon Bolt",
+          "cd": 28,
+          "type": "AREA",
+          "center": "target",
+          "range": 45,
+          "throw": true,
+          "radius": 14,
+          "effects": [
+            [
+              "glowing",
+              4,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "id": "sova_recon_bolt",
+          "cd_ticks": 560,
+          "particle": "enchanted_hit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:arrow",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Hunter's Fury",
+          "cd": 100,
+          "type": "MODE",
+          "ammo": 3,
+          "duration": 12,
+          "body_dmg": 14,
+          "head": 1,
+          "range": 70,
+          "shot_cd": 12,
+          "shape": "bolt",
+          "id": "sova_hunter_s_fury",
+          "cd_ticks": 2000,
+          "particle": "enchanted_hit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:arrow",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reyna",
+      "role": "duelist",
+      "color": 12997608,
+      "name": "Reyna",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Leer",
+          "cd": 18,
+          "type": "AREA",
+          "center": "target",
+          "range": 24,
+          "throw": false,
+          "radius": 3,
+          "effects": [
+            [
+              "blindness",
+              3,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "reyna_leer",
+          "cd_ticks": 360,
+          "particle": "sculk_soul",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:purple_dye",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Devour",
+          "cd": 10,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "heal": 8,
+          "ally_effects": [
+            [
+              "regeneration",
+              3,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "id": "reyna_devour",
+          "cd_ticks": 200,
+          "particle": "sculk_soul",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:purple_dye",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Dismiss",
+          "cd": 20,
+          "type": "DASH",
+          "speed": 1.8,
+          "ticks": 4,
+          "self_fx": [
+            [
+              "invisibility",
+              2,
+              0
+            ]
+          ],
+          "id": "reyna_dismiss",
+          "cd_ticks": 400,
+          "particle": "sculk_soul",
+          "sound": "entity.breeze.slide",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:purple_dye",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Empress",
+          "cd": 90,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "self_fx": [
+            [
+              "speed",
+              14,
+              1
+            ],
+            [
+              "strength",
+              14,
+              0
+            ],
+            [
+              "regeneration",
+              14,
+              1
+            ]
+          ],
+          "shape": "ring",
+          "id": "reyna_empress",
+          "cd_ticks": 1800,
+          "particle": "sculk_soul",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:purple_dye",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "raze",
+      "role": "duelist",
+      "color": 16751150,
+      "name": "Raze",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Blast Pack",
+          "cd": 10,
+          "type": "AREA",
+          "center": "self",
+          "radius": 3.5,
+          "damage": 5,
+          "knock": 1.3,
+          "lift": 0.3,
+          "launch_up": 0.9,
+          "launch_fwd": 1.2,
+          "shape": "orb",
+          "particle": "explosion",
+          "id": "raze_blast_pack",
+          "cd_ticks": 200,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:fire_charge",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Paint Shells",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4.5,
+          "damage": 9,
+          "knock": 0.8,
+          "shape": "orb",
+          "id": "raze_paint_shells",
+          "cd_ticks": 400,
+          "particle": "flame",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:fire_charge",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Boom Bot",
+          "cd": 30,
+          "type": "AREA",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 4,
+          "damage": 12,
+          "knock": 1.0,
+          "shape": "cube",
+          "particle": "explosion",
+          "id": "raze_boom_bot",
+          "cd_ticks": 600,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:fire_charge",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Showstopper",
+          "cd": 100,
+          "type": "MODE",
+          "ammo": 3,
+          "duration": 12,
+          "body_dmg": 16,
+          "head": 1,
+          "range": 90,
+          "aoe": 5,
+          "aoe_damage": 10,
+          "shot_cd": 15,
+          "shape": "bolt",
+          "id": "raze_showstopper",
+          "cd_ticks": 2000,
+          "particle": "flame",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:fire_charge",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "breach",
+      "role": "initiator",
+      "color": 14247482,
+      "name": "Breach",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Aftershock",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 18,
+          "throw": true,
+          "radius": 3.5,
+          "damage": 10,
+          "shape": "orb",
+          "id": "breach_aftershock",
+          "cd_ticks": 400,
+          "particle": "crit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:piston",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Flashpoint",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 14,
+          "throw": true,
+          "facing": true,
+          "radius": 10,
+          "effects": [
+            [
+              "blindness",
+              2.5,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "flash",
+          "id": "breach_flashpoint",
+          "cd_ticks": 440,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:piston",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Fault Line",
+          "cd": 25,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": false,
+          "radius": 5,
+          "effects": [
+            [
+              "slowness",
+              3,
+              2
+            ],
+            [
+              "nausea",
+              3,
+              0
+            ]
+          ],
+          "lift": 0.4,
+          "shape": "disc",
+          "id": "breach_fault_line",
+          "cd_ticks": 500,
+          "particle": "crit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:piston",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Rolling Thunder",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 30,
+          "throw": false,
+          "radius": 12,
+          "effects": [
+            [
+              "slowness",
+              4,
+              3
+            ],
+            [
+              "nausea",
+              4,
+              0
+            ]
+          ],
+          "lift": 1.0,
+          "knock": 0.6,
+          "shape": "ring",
+          "id": "breach_rolling_thunder",
+          "cd_ticks": 2000,
+          "particle": "crit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:piston",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skye",
+      "role": "initiator",
+      "color": 9362283,
+      "name": "Skye",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Regrowth",
+          "cd": 24,
+          "type": "ZONE",
+          "center": "self",
+          "radius": 6,
+          "duration": 5,
+          "follow": true,
+          "heal": 5,
+          "size": 3.0,
+          "shape": "cross",
+          "id": "skye_regrowth",
+          "cd_ticks": 480,
+          "particle": "happy_villager",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:oak_sapling",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Trailblazer",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 28,
+          "throw": true,
+          "radius": 3,
+          "damage": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              3
+            ],
+            [
+              "nausea",
+              2,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "skye_trailblazer",
+          "cd_ticks": 400,
+          "particle": "happy_villager",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:oak_sapling",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Guiding Light",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "facing": true,
+          "radius": 9,
+          "effects": [
+            [
+              "blindness",
+              2,
+              0
+            ]
+          ],
+          "shape": "star",
+          "particle": "flash",
+          "id": "skye_guiding_light",
+          "cd_ticks": 440,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:oak_sapling",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Seekers",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 32,
+          "damage": 8,
+          "effects": [
+            [
+              "nausea",
+              3,
+              0
+            ],
+            [
+              "glowing",
+              4,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "id": "skye_seekers",
+          "cd_ticks": 2000,
+          "particle": "happy_villager",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:oak_sapling",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoru",
+      "role": "duelist",
+      "color": 4152319,
+      "name": "Yoru",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Fakeout",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 6,
+          "duration": 6,
+          "effects": [
+            [
+              "slowness",
+              1.5,
+              0
+            ]
+          ],
+          "shape": "star",
+          "id": "yoru_fakeout",
+          "cd_ticks": 400,
+          "particle": "portal",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:chorus_fruit",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Blindside",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 16,
+          "throw": true,
+          "facing": true,
+          "radius": 7,
+          "effects": [
+            [
+              "blindness",
+              2,
+              0
+            ]
+          ],
+          "shape": "star",
+          "particle": "flash",
+          "id": "yoru_blindside",
+          "cd_ticks": 440,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:chorus_fruit",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Gatecrash",
+          "cd": 25,
+          "type": "BLINK",
+          "range": 35,
+          "particle": "reverse_portal",
+          "id": "yoru_gatecrash",
+          "cd_ticks": 500,
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:chorus_fruit",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Dimensional Drift",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 2,
+          "self_fx": [
+            [
+              "invisibility",
+              10,
+              0
+            ],
+            [
+              "speed",
+              10,
+              1
+            ]
+          ],
+          "shape": "ring",
+          "particle": "reverse_portal",
+          "id": "yoru_dimensional_drift",
+          "cd_ticks": 2000,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:chorus_fruit",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "astra",
+      "role": "controller",
+      "color": 11561983,
+      "name": "Astra",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Gravity Well",
+          "cd": 25,
+          "type": "ZONE",
+          "center": "target",
+          "range": 30,
+          "throw": false,
+          "radius": 5,
+          "duration": 3,
+          "knock": -0.5,
+          "effects": [
+            [
+              "weakness",
+              2,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "particle": "reverse_portal",
+          "id": "astra_gravity_well",
+          "cd_ticks": 500,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:glowstone_dust",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Nova Pulse",
+          "cd": 25,
+          "type": "AREA",
+          "center": "target",
+          "range": 30,
+          "throw": false,
+          "radius": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              4
+            ],
+            [
+              "nausea",
+              2,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "astra_nova_pulse",
+          "cd_ticks": 500,
+          "particle": "end_rod",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:glowstone_dust",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Nebula",
+          "cd": 30,
+          "type": "ZONE",
+          "center": "target",
+          "range": 40,
+          "throw": false,
+          "radius": 3,
+          "duration": 10,
+          "shape": "orb",
+          "id": "astra_nebula",
+          "cd_ticks": 600,
+          "particle": "end_rod",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:glowstone_dust",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Cosmic Divide",
+          "cd": 110,
+          "type": "WALL",
+          "along": true,
+          "width": 15,
+          "height": 6,
+          "duration": 12,
+          "block": "purple_stained_glass",
+          "id": "astra_cosmic_divide",
+          "cd_ticks": 2200,
+          "particle": "end_rod",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:glowstone_dust",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kayo",
+      "role": "initiator",
+      "color": 5822166,
+      "name": "KAY/O",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "FLASH/drive",
+          "cd": 16,
+          "type": "AREA",
+          "center": "target",
+          "range": 20,
+          "throw": true,
+          "facing": true,
+          "radius": 9,
+          "effects": [
+            [
+              "blindness",
+              2.5,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "flash",
+          "id": "kayo_flash_drive",
+          "cd_ticks": 320,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:copper_ingot",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "ZERO/point",
+          "cd": 24,
+          "type": "AREA",
+          "center": "target",
+          "range": 26,
+          "throw": true,
+          "radius": 5,
+          "damage": 4,
+          "effects": [
+            [
+              "weakness",
+              6,
+              1
+            ],
+            [
+              "mining_fatigue",
+              6,
+              2
+            ]
+          ],
+          "shape": "bolt",
+          "id": "kayo_zero_point",
+          "cd_ticks": 480,
+          "particle": "electric_spark",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:copper_ingot",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "FRAG/ment",
+          "cd": 28,
+          "type": "AREA",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 5,
+          "damage": 14,
+          "knock": 0.5,
+          "shape": "cube",
+          "particle": "explosion",
+          "id": "kayo_frag_ment",
+          "cd_ticks": 560,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:copper_ingot",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "NULL/cmd",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 12,
+          "effects": [
+            [
+              "weakness",
+              8,
+              2
+            ],
+            [
+              "mining_fatigue",
+              8,
+              2
+            ],
+            [
+              "slowness",
+              8,
+              1
+            ]
+          ],
+          "self_fx": [
+            [
+              "speed",
+              10,
+              1
+            ],
+            [
+              "resistance",
+              10,
+              1
+            ]
+          ],
+          "shape": "dome",
+          "id": "kayo_null_cmd",
+          "cd_ticks": 2000,
+          "particle": "electric_spark",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:copper_ingot",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chamber",
+      "role": "sentinel",
+      "color": 15058027,
+      "name": "Chamber",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Trademark",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 20,
+          "throw": true,
+          "radius": 4,
+          "duration": 20,
+          "effects": [
+            [
+              "slowness",
+              2,
+              2
+            ],
+            [
+              "glowing",
+              2,
+              0
+            ]
+          ],
+          "shape": "disc",
+          "id": "chamber_trademark",
+          "cd_ticks": 400,
+          "particle": "firework",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gold_nugget",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Headhunter",
+          "cd": 5,
+          "type": "BEAM",
+          "range": 70,
+          "damage": 8,
+          "head": 2,
+          "shape": "bolt",
+          "id": "chamber_headhunter",
+          "cd_ticks": 100,
+          "particle": "firework",
+          "sound": "entity.arrow.shoot",
+          "recipe": [
+            [
+              "minecraft:gold_nugget",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Rendezvous",
+          "cd": 25,
+          "type": "BLINK",
+          "range": 10,
+          "id": "chamber_rendezvous",
+          "cd_ticks": 500,
+          "particle": "firework",
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:gold_nugget",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Tour de Force",
+          "cd": 100,
+          "type": "MODE",
+          "ammo": 1,
+          "duration": 15,
+          "body_dmg": 20,
+          "head_kill": true,
+          "range": 100,
+          "shot_cd": 20,
+          "shape": "bolt",
+          "id": "chamber_tour_de_force",
+          "cd_ticks": 2000,
+          "particle": "firework",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:gold_nugget",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neon",
+      "role": "duelist",
+      "color": 3050495,
+      "name": "Neon",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Fast Lane",
+          "cd": 20,
+          "type": "WALL",
+          "along": true,
+          "width": 12,
+          "height": 2,
+          "duration": 6,
+          "block": "cyan_stained_glass",
+          "effects": [
+            [
+              "slowness",
+              1,
+              1
+            ]
+          ],
+          "id": "neon_fast_lane",
+          "cd_ticks": 400,
+          "particle": "electric_spark",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:sugar",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Relay Bolt",
+          "cd": 18,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              3
+            ]
+          ],
+          "lift": 0.5,
+          "shape": "orb",
+          "id": "neon_relay_bolt",
+          "cd_ticks": 360,
+          "particle": "electric_spark",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:sugar",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "High Gear",
+          "cd": 15,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "self_fx": [
+            [
+              "speed",
+              7,
+              2
+            ],
+            [
+              "jump_boost",
+              7,
+              1
+            ]
+          ],
+          "shape": "ring",
+          "id": "neon_high_gear",
+          "cd_ticks": 300,
+          "particle": "electric_spark",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:sugar",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Overdrive",
+          "cd": 100,
+          "type": "MODE",
+          "ammo": 24,
+          "duration": 12,
+          "body_dmg": 3,
+          "head": 1.5,
+          "range": 40,
+          "shot_cd": 3,
+          "shape": "bolt",
+          "self_fx": [
+            [
+              "speed",
+              12,
+              1
+            ]
+          ],
+          "id": "neon_overdrive",
+          "cd_ticks": 2000,
+          "particle": "electric_spark",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:sugar",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fade",
+      "role": "initiator",
+      "color": 7032478,
+      "name": "Fade",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Prowler",
+          "cd": 24,
+          "type": "ZONE",
+          "center": "target",
+          "range": 35,
+          "throw": false,
+          "radius": 8,
+          "duration": 6,
+          "effects": [
+            [
+              "glowing",
+              2,
+              0
+            ],
+            [
+              "slowness",
+              2,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "id": "fade_prowler",
+          "cd_ticks": 480,
+          "particle": "sculk_soul",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:ink_sac",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Seize",
+          "cd": 26,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 4.5,
+          "duration": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              4
+            ]
+          ],
+          "shape": "disc",
+          "id": "fade_seize",
+          "cd_ticks": 520,
+          "particle": "sculk_soul",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:ink_sac",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Haunt",
+          "cd": 28,
+          "type": "AREA",
+          "center": "target",
+          "range": 32,
+          "throw": true,
+          "radius": 12,
+          "effects": [
+            [
+              "glowing",
+              4,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "id": "fade_haunt",
+          "cd_ticks": 560,
+          "particle": "sculk_soul",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:ink_sac",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Nightfall",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 40,
+          "throw": false,
+          "radius": 16,
+          "effects": [
+            [
+              "darkness",
+              5,
+              0
+            ],
+            [
+              "slowness",
+              5,
+              1
+            ],
+            [
+              "glowing",
+              5,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "id": "fade_nightfall",
+          "cd_ticks": 2000,
+          "particle": "sculk_soul",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:ink_sac",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "harbor",
+      "role": "controller",
+      "color": 2795424,
+      "name": "Harbor",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Cascade",
+          "cd": 18,
+          "type": "WALL",
+          "along": true,
+          "width": 8,
+          "height": 3,
+          "duration": 3,
+          "block": "light_blue_stained_glass",
+          "effects": [
+            [
+              "slowness",
+              1,
+              1
+            ]
+          ],
+          "id": "harbor_cascade",
+          "cd_ticks": 360,
+          "particle": "bubble_pop",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:prismarine_shard",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Cove",
+          "cd": 25,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 3,
+          "duration": 12,
+          "shape": "dome",
+          "id": "harbor_cove",
+          "cd_ticks": 500,
+          "particle": "bubble_pop",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:prismarine_shard",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "High Tide",
+          "cd": 30,
+          "type": "WALL",
+          "along": true,
+          "width": 12,
+          "height": 3,
+          "duration": 7,
+          "block": "blue_stained_glass",
+          "effects": [
+            [
+              "slowness",
+              2,
+              2
+            ]
+          ],
+          "id": "harbor_high_tide",
+          "cd_ticks": 600,
+          "particle": "bubble_pop",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:prismarine_shard",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Reckoning",
+          "cd": 100,
+          "type": "ZONE",
+          "center": "target",
+          "range": 40,
+          "throw": false,
+          "radius": 8,
+          "duration": 8,
+          "damage": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              3
+            ]
+          ],
+          "shape": "disc",
+          "id": "harbor_reckoning",
+          "cd_ticks": 2000,
+          "particle": "bubble_pop",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:prismarine_shard",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gekko",
+      "role": "initiator",
+      "color": 10938426,
+      "name": "Gekko",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Mosh Pit",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4.5,
+          "damage": 12,
+          "shape": "orb",
+          "particle": "explosion",
+          "id": "gekko_mosh_pit",
+          "cd_ticks": 400,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:slime_ball",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Wingman",
+          "cd": 24,
+          "type": "AREA",
+          "center": "target",
+          "range": 30,
+          "throw": true,
+          "radius": 3,
+          "effects": [
+            [
+              "slowness",
+              2,
+              4
+            ],
+            [
+              "nausea",
+              2,
+              0
+            ]
+          ],
+          "shape": "cube",
+          "id": "gekko_wingman",
+          "cd_ticks": 480,
+          "particle": "happy_villager",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:slime_ball",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Dizzy",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 26,
+          "throw": true,
+          "facing": true,
+          "radius": 12,
+          "effects": [
+            [
+              "blindness",
+              3,
+              0
+            ]
+          ],
+          "shape": "star",
+          "particle": "flash",
+          "id": "gekko_dizzy",
+          "cd_ticks": 440,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:slime_ball",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Thrash",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 35,
+          "throw": true,
+          "radius": 5,
+          "damage": 6,
+          "effects": [
+            [
+              "slowness",
+              5,
+              4
+            ],
+            [
+              "nausea",
+              5,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "gekko_thrash",
+          "cd_ticks": 2000,
+          "particle": "happy_villager",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:slime_ball",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deadlock",
+      "role": "sentinel",
+      "color": 12109014,
+      "name": "Deadlock",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "GravNet",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 6,
+          "effects": [
+            [
+              "slowness",
+              3,
+              3
+            ],
+            [
+              "nausea",
+              3,
+              0
+            ]
+          ],
+          "shape": "disc",
+          "id": "deadlock_gravnet",
+          "cd_ticks": 400,
+          "particle": "ash",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:cobweb",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Sonic Sensor",
+          "cd": 24,
+          "type": "ZONE",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 8,
+          "duration": 15,
+          "effects": [
+            [
+              "glowing",
+              2,
+              0
+            ]
+          ],
+          "size": 0.6,
+          "shape": "cube",
+          "id": "deadlock_sonic_sensor",
+          "cd_ticks": 480,
+          "particle": "ash",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:cobweb",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Barrier Mesh",
+          "cd": 30,
+          "type": "WALL",
+          "range": 12,
+          "along": false,
+          "width": 7,
+          "height": 2,
+          "duration": 14,
+          "block": "iron_bars",
+          "id": "deadlock_barrier_mesh",
+          "cd_ticks": 600,
+          "particle": "ash",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:cobweb",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Annihilation",
+          "cd": 110,
+          "type": "AREA",
+          "center": "target",
+          "range": 36,
+          "throw": true,
+          "radius": 4,
+          "damage": 14,
+          "effects": [
+            [
+              "slowness",
+              5,
+              4
+            ]
+          ],
+          "shape": "cube",
+          "id": "deadlock_annihilation",
+          "cd_ticks": 2200,
+          "particle": "ash",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:cobweb",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iso",
+      "role": "duelist",
+      "color": 12733398,
+      "name": "Iso",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Undercut",
+          "cd": 18,
+          "type": "BEAM",
+          "range": 30,
+          "damage": 2,
+          "effects": [
+            [
+              "weakness",
+              5,
+              1
+            ],
+            [
+              "slowness",
+              3,
+              1
+            ]
+          ],
+          "shape": "bolt",
+          "id": "iso_undercut",
+          "cd_ticks": 360,
+          "particle": "enchanted_hit",
+          "sound": "entity.arrow.shoot",
+          "recipe": [
+            [
+              "minecraft:quartz",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Double Tap",
+          "cd": 25,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "self_fx": [
+            [
+              "absorption",
+              8,
+              1
+            ],
+            [
+              "haste",
+              8,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "id": "iso_double_tap",
+          "cd_ticks": 500,
+          "particle": "enchanted_hit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:quartz",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Contingency",
+          "cd": 30,
+          "type": "WALL",
+          "along": true,
+          "width": 7,
+          "height": 3,
+          "duration": 6,
+          "block": "purple_stained_glass",
+          "id": "iso_contingency",
+          "cd_ticks": 600,
+          "particle": "enchanted_hit",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:quartz",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Kill Contract",
+          "cd": 100,
+          "type": "ZONE",
+          "center": "target",
+          "range": 26,
+          "throw": false,
+          "radius": 8,
+          "duration": 12,
+          "effects": [
+            [
+              "weakness",
+              3,
+              1
+            ],
+            [
+              "slowness",
+              3,
+              1
+            ]
+          ],
+          "self_fx": [
+            [
+              "strength",
+              12,
+              1
+            ],
+            [
+              "absorption",
+              12,
+              2
+            ]
+          ],
+          "shape": "dome",
+          "id": "iso_kill_contract",
+          "cd_ticks": 2000,
+          "particle": "enchanted_hit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:quartz",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clove",
+      "role": "controller",
+      "color": 16748497,
+      "name": "Clove",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Pick-me-up",
+          "cd": 12,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "self_fx": [
+            [
+              "absorption",
+              8,
+              2
+            ],
+            [
+              "speed",
+              6,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "id": "clove_pick_me_up",
+          "cd_ticks": 240,
+          "particle": "heart",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:bone_meal",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Meddle",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4,
+          "damage": 5,
+          "effects": [
+            [
+              "weakness",
+              4,
+              1
+            ]
+          ],
+          "shape": "orb",
+          "id": "clove_meddle",
+          "cd_ticks": 400,
+          "particle": "heart",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:bone_meal",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Ruse",
+          "cd": 28,
+          "type": "ZONE",
+          "center": "target",
+          "range": 26,
+          "throw": true,
+          "radius": 3.5,
+          "duration": 9,
+          "shape": "orb",
+          "particle": "smoke",
+          "id": "clove_ruse",
+          "cd_ticks": 560,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:bone_meal",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Not Dead Yet",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "heal": 10,
+          "self_fx": [
+            [
+              "regeneration",
+              12,
+              2
+            ],
+            [
+              "resistance",
+              12,
+              1
+            ]
+          ],
+          "shape": "star",
+          "id": "clove_not_dead_yet",
+          "cd_ticks": 2000,
+          "particle": "heart",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:bone_meal",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vyse",
+      "role": "sentinel",
+      "color": 10474728,
+      "name": "Vyse",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Razorvine",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 20,
+          "throw": false,
+          "radius": 3.5,
+          "duration": 10,
+          "damage": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              1
+            ]
+          ],
+          "shape": "disc",
+          "id": "vyse_razorvine",
+          "cd_ticks": 400,
+          "particle": "crit",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:vine",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Shear",
+          "cd": 24,
+          "type": "WALL",
+          "range": 12,
+          "along": false,
+          "width": 7,
+          "height": 3,
+          "duration": 6,
+          "block": "glass_pane",
+          "damage": 6,
+          "effects": [
+            [
+              "slowness",
+              2,
+              2
+            ]
+          ],
+          "id": "vyse_shear",
+          "cd_ticks": 480,
+          "particle": "crit",
+          "sound": "block.glass.place",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:vine",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Arc Rose",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "facing": true,
+          "radius": 9,
+          "effects": [
+            [
+              "blindness",
+              2,
+              0
+            ]
+          ],
+          "shape": "star",
+          "particle": "flash",
+          "id": "vyse_arc_rose",
+          "cd_ticks": 440,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:vine",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Steel Garden",
+          "cd": 100,
+          "type": "AREA",
+          "center": "self",
+          "radius": 18,
+          "effects": [
+            [
+              "slowness",
+              6,
+              3
+            ],
+            [
+              "mining_fatigue",
+              6,
+              2
+            ],
+            [
+              "weakness",
+              6,
+              1
+            ]
+          ],
+          "shape": "dome",
+          "id": "vyse_steel_garden",
+          "cd_ticks": 2000,
+          "particle": "crit",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:vine",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tejo",
+      "role": "initiator",
+      "color": 16739179,
+      "name": "Tejo",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Stealth Drone",
+          "cd": 30,
+          "type": "ZONE",
+          "center": "target",
+          "range": 40,
+          "throw": false,
+          "radius": 8,
+          "duration": 10,
+          "effects": [
+            [
+              "glowing",
+              2,
+              0
+            ],
+            [
+              "weakness",
+              2,
+              0
+            ]
+          ],
+          "size": 0.9,
+          "shape": "cube",
+          "id": "tejo_stealth_drone",
+          "cd_ticks": 600,
+          "particle": "poof",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:iron_nugget",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Special Delivery",
+          "cd": 22,
+          "type": "AREA",
+          "center": "target",
+          "range": 26,
+          "throw": true,
+          "radius": 4,
+          "effects": [
+            [
+              "slowness",
+              3,
+              4
+            ],
+            [
+              "nausea",
+              3,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "tejo_special_delivery",
+          "cd_ticks": 440,
+          "particle": "poof",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:iron_nugget",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Guided Salvo",
+          "cd": 30,
+          "type": "AREA",
+          "center": "target",
+          "range": 45,
+          "throw": false,
+          "radius": 5,
+          "damage": 10,
+          "knock": 0.7,
+          "shape": "cube",
+          "particle": "explosion",
+          "id": "tejo_guided_salvo",
+          "cd_ticks": 600,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:iron_nugget",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Armageddon",
+          "cd": 110,
+          "type": "ZONE",
+          "center": "target",
+          "range": 50,
+          "throw": false,
+          "radius": 12,
+          "duration": 5,
+          "damage": 6,
+          "shape": "ring",
+          "particle": "explosion",
+          "id": "tejo_armageddon",
+          "cd_ticks": 2200,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:iron_nugget",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "waylay",
+      "role": "duelist",
+      "color": 16736184,
+      "name": "Waylay",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Saturate",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4,
+          "effects": [
+            [
+              "slowness",
+              3,
+              2
+            ],
+            [
+              "weakness",
+              3,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "id": "waylay_saturate",
+          "cd_ticks": 400,
+          "particle": "glow",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:snowball",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Lightspeed",
+          "cd": 12,
+          "type": "DASH",
+          "speed": 2.2,
+          "ticks": 8,
+          "self_fx": [
+            [
+              "speed",
+              4,
+              1
+            ]
+          ],
+          "id": "waylay_lightspeed",
+          "cd_ticks": 240,
+          "particle": "glow",
+          "sound": "entity.breeze.slide",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:snowball",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Refract",
+          "cd": 20,
+          "type": "BLINK",
+          "range": 10,
+          "self_fx": [
+            [
+              "speed",
+              3,
+              1
+            ]
+          ],
+          "id": "waylay_refract",
+          "cd_ticks": 400,
+          "particle": "glow",
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:snowball",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Convergent Paths",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 30,
+          "throw": false,
+          "radius": 14,
+          "effects": [
+            [
+              "slowness",
+              4,
+              3
+            ],
+            [
+              "nausea",
+              4,
+              0
+            ]
+          ],
+          "knock": 0.5,
+          "shape": "ring",
+          "id": "waylay_convergent_paths",
+          "cd_ticks": 2000,
+          "particle": "glow",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:snowball",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "veto",
+      "role": "sentinel",
+      "color": 9080729,
+      "name": "Veto",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Crosscut",
+          "cd": 18,
+          "type": "BLINK",
+          "range": 16,
+          "id": "veto_crosscut",
+          "cd_ticks": 360,
+          "particle": "smoke",
+          "sound": "entity.enderman.teleport",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:coal",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Chokehold",
+          "cd": 22,
+          "type": "ZONE",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 4,
+          "duration": 4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              4
+            ],
+            [
+              "weakness",
+              2,
+              1
+            ]
+          ],
+          "shape": "disc",
+          "id": "veto_chokehold",
+          "cd_ticks": 440,
+          "particle": "smoke",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:coal",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Interceptor",
+          "cd": 30,
+          "type": "ZONE",
+          "center": "self",
+          "radius": 8,
+          "duration": 10,
+          "follow": true,
+          "ally_effects": [
+            [
+              "resistance",
+              2,
+              1
+            ]
+          ],
+          "shape": "dome",
+          "particle": "crit",
+          "id": "veto_interceptor",
+          "cd_ticks": 600,
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:coal",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Evolution",
+          "cd": 90,
+          "type": "AREA",
+          "center": "self",
+          "radius": 1,
+          "self_fx": [
+            [
+              "strength",
+              25,
+              1
+            ],
+            [
+              "regeneration",
+              25,
+              1
+            ],
+            [
+              "resistance",
+              25,
+              1
+            ],
+            [
+              "speed",
+              25,
+              1
+            ]
+          ],
+          "shape": "ring",
+          "id": "veto_evolution",
+          "cd_ticks": 1800,
+          "particle": "smoke",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:coal",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "miks",
+      "role": "controller",
+      "color": 16731531,
+      "name": "Miks",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "M-Pulse",
+          "cd": 20,
+          "type": "ZONE",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "radius": 5,
+          "duration": 6,
+          "heal": 2,
+          "effects": [
+            [
+              "slowness",
+              2,
+              1
+            ],
+            [
+              "nausea",
+              2,
+              0
+            ]
+          ],
+          "shape": "disc",
+          "id": "miks_m_pulse",
+          "cd_ticks": 400,
+          "particle": "note",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:note_block",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Harmonize",
+          "cd": 25,
+          "type": "AREA",
+          "center": "self",
+          "radius": 12,
+          "ally_effects": [
+            [
+              "speed",
+              8,
+              1
+            ],
+            [
+              "strength",
+              8,
+              0
+            ]
+          ],
+          "shape": "ring",
+          "id": "miks_harmonize",
+          "cd_ticks": 500,
+          "particle": "note",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:note_block",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Waveform",
+          "cd": 28,
+          "type": "ZONE",
+          "center": "target",
+          "range": 28,
+          "throw": true,
+          "radius": 3,
+          "duration": 8,
+          "shape": "orb",
+          "id": "miks_waveform",
+          "cd_ticks": 560,
+          "particle": "note",
+          "sound": "block.beacon.activate",
+          "recipe": [
+            [
+              "minecraft:note_block",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Bassquake",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 20,
+          "throw": false,
+          "radius": 9,
+          "effects": [
+            [
+              "slowness",
+              5,
+              3
+            ],
+            [
+              "weakness",
+              5,
+              1
+            ],
+            [
+              "nausea",
+              5,
+              0
+            ]
+          ],
+          "knock": 1.5,
+          "shape": "ring",
+          "particle": "sonic_boom",
+          "id": "miks_bassquake",
+          "cd_ticks": 2000,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:note_block",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hush",
+      "role": "duelist",
+      "color": 15247103,
+      "name": "Hush",
+      "abilities": [
+        {
+          "slot": 0,
+          "name": "Flow",
+          "cd": 12,
+          "type": "LEAP",
+          "up": 0.75,
+          "fwd": 1.3,
+          "id": "hush_flow",
+          "cd_ticks": 240,
+          "particle": "end_rod",
+          "sound": "entity.wind_charge.wind_burst",
+          "shape": "",
+          "recipe": [
+            [
+              "minecraft:phantom_membrane",
+              2
+            ],
+            [
+              "minecraft:iron_ingot",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "name": "Flashbulb",
+          "cd": 20,
+          "type": "AREA",
+          "center": "target",
+          "range": 22,
+          "throw": true,
+          "facing": true,
+          "radius": 10,
+          "effects": [
+            [
+              "blindness",
+              2.5,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "flash",
+          "id": "hush_flashbulb",
+          "cd_ticks": 400,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:phantom_membrane",
+              2
+            ],
+            [
+              "minecraft:gold_ingot",
+              1
+            ],
+            [
+              "minecraft:redstone",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 2,
+          "name": "Displacement",
+          "cd": 24,
+          "type": "AREA",
+          "center": "target",
+          "range": 24,
+          "throw": true,
+          "radius": 6,
+          "knock": -1.4,
+          "effects": [
+            [
+              "slowness",
+              2,
+              2
+            ],
+            [
+              "nausea",
+              2,
+              0
+            ]
+          ],
+          "shape": "orb",
+          "particle": "reverse_portal",
+          "id": "hush_displacement",
+          "cd_ticks": 480,
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:phantom_membrane",
+              2
+            ],
+            [
+              "minecraft:emerald",
+              1
+            ],
+            [
+              "minecraft:lapis_lazuli",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 3,
+          "name": "Suspension",
+          "cd": 100,
+          "type": "AREA",
+          "center": "target",
+          "range": 40,
+          "throw": true,
+          "radius": 6,
+          "effects": [
+            [
+              "levitation",
+              4,
+              1
+            ]
+          ],
+          "lift": 0.4,
+          "shape": "orb",
+          "id": "hush_suspension",
+          "cd_ticks": 2000,
+          "particle": "end_rod",
+          "sound": "entity.firework_rocket.blast",
+          "recipe": [
+            [
+              "minecraft:phantom_membrane",
+              3
+            ],
+            [
+              "minecraft:diamond",
+              2
+            ],
+            [
+              "minecraft:ender_eye",
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

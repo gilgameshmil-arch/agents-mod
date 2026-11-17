@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:tejo_stealth_drone",
+    "count": 1
+  }
+}

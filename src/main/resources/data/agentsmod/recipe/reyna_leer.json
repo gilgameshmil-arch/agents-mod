@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:purple_dye",
+    "minecraft:purple_dye",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:reyna_leer",
+    "count": 1
+  }
+}

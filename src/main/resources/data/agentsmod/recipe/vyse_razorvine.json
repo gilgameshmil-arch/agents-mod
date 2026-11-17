@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:vine",
+    "minecraft:vine",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:vyse_razorvine",
+    "count": 1
+  }
+}

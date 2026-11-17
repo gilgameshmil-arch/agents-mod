@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "agentsmod:item/viper_viper_s_pit"
+  }
+}

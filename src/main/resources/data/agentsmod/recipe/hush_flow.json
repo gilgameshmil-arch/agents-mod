@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:phantom_membrane",
+    "minecraft:phantom_membrane",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:hush_flow",
+    "count": 1
+  }
+}

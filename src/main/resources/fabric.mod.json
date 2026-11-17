@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "agentsmod",
+  "version": "${version}",
+  "name": "Agents Mod",
+  "description": "Todos os agentes e habilidades em 3D, desbloqueadas por crafting no survival. HUD vertical e loadout de agentes.",
+  "authors": ["Agents Mod"],
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.openai.agentsmod.AgentsMod"],
+    "client": ["dev.openai.agentsmod.AgentsClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

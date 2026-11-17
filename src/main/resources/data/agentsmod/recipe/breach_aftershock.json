@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:piston",
+    "minecraft:piston",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "agentsmod:breach_aftershock",
+    "count": 1
+  }
+}
