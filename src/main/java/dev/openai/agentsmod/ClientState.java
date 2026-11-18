@@ -14,7 +14,7 @@ public final class ClientState {
     private static int[] words = new int[Defs.words()];
     private static final long[] COOLDOWN_END = new long[4];
     private static long clientTicks = 0;
-    private static int ammo = 0;
+    private static int packed = 0; // bit 20 = modo ativo, 21 = recarregando, 16..19 = slot, 8..15 = máx, 0..7 = munição, 22..24 = abates
 
     private static final long[] PRESSED_AT = {-100, -100, -100, -100};
     private static final long[] FLASH_AT = {-100, -100, -100, -100};
@@ -42,17 +42,22 @@ public final class ClientState {
         List<Integer> u = s.unlocked();
         for (int i = 0; i < u.size(); i++) words[i] = u.get(i);
         for (int i = 0; i < 4; i++) COOLDOWN_END[i] = clientTicks + (i < s.cooldowns().size() ? s.cooldowns().get(i) : 0);
-        ammo = s.ammo();
+        packed = s.ammo();
     }
 
     public static void reset() {
         selected = -1;
         Arrays.fill(words, 0);
         Arrays.fill(COOLDOWN_END, 0);
-        ammo = 0;
+        packed = 0;
     }
 
-    public static int ammo() { return ammo; }
+    public static int ammo() { return packed & 255; }
+    public static boolean modeActive() { return ((packed >> 20) & 1) == 1; }
+    public static boolean reloading() { return ((packed >> 21) & 1) == 1; }
+    public static int modeSlot() { return (packed >> 16) & 15; }
+    public static int modeMax() { return (packed >> 8) & 255; }
+    public static int kills() { return (packed >> 22) & 7; }
 
     public static AgentDef agent() { return Defs.agent(selected); }
 
@@ -77,7 +82,7 @@ public final class ClientState {
     }
 
     public static boolean isReady(AbilityDef d) {
-        return isUnlocked(d) && remainingTicks(d.slot) == 0;
+        return isUnlocked(d) && remainingTicks(d.slot) == 0 && (!d.b("needs_kill", false) || kills() > 0);
     }
 
     /** Recarga "prevista" no cliente no instante da tecla; o servidor corrige no próximo StateS2C. */

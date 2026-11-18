@@ -120,8 +120,8 @@ def canister_texture():
     return img
 
 
-def smoke_texture():
-    """Ruído suave translúcido (fumaça). Alfa maior no miolo, bordas esfumadas."""
+def smoke_texture(tint=None):
+    """Ruído suave translúcido (fumaça). Alfa maior no miolo, bordas esfumadas. tint=(r,g,b) tinge para o agente."""
     rnd = random.Random(23)
     big = Image.new("L", (8, 8))
     for y in range(8):
@@ -133,6 +133,10 @@ def smoke_texture():
         for x in range(32):
             v = big.getpixel((x, y))
             c = lerp((176, 204, 226), (246, 252, 255), v / 255)
+            if tint:
+                dark = tuple(int(t * 0.55) for t in tint)
+                light = tuple(int(t * 0.55 + 255 * 0.45) for t in tint)
+                c = lerp(dark, light, v / 255)
             img.putpixel((x, y), c + (int(120 + 100 * v / 255),))
     return img
 
@@ -245,7 +249,7 @@ def canister_model():
     return model({"0": f"{MOD}:item/jett/canister", "particle": f"{MOD}:item/jett/canister"}, els)
 
 
-def smoke_lump_model():
+def smoke_lump_model(tex="smoke"):
     """Tufo de fumaça: miolo + 18 volumes menores em casca irregular (tamanhos/ângulos variados) => silhueta de
     nuvem, não de cubo. Translúcido e sem sombreamento."""
     uv = uvpx(0, 0, 31, 31)
@@ -265,7 +269,7 @@ def smoke_lump_model():
         axis = rnd.choice(("y", "y", "x", "z"))
         els.append(el([cx - h, cy - h, cz - h], [cx + h, cy + h, cz + h], uv, uv,
                       rot=(axis, ang, (cx, cy, cz)) if ang else None, shade=False))
-    return model({"0": f"{MOD}:item/jett/smoke", "particle": f"{MOD}:item/jett/smoke"}, els)
+    return model({"0": f"{MOD}:item/jett/{tex}", "particle": f"{MOD}:item/jett/{tex}"}, els)
 
 
 def wind_spiral_model(turns=1.7, height=14.5, r0=5.4, r1=2.4, segs=34):
@@ -418,6 +422,13 @@ def emit(res_root, agents):
               "wind_spiral": wind_spiral_model(), "wind_streak": wind_streak_model(), "shock_ring": shock_ring_model()}
     for name, m in models.items():
         _w(os.path.join(mdir, f"{name}.json"), m)
+        _w(os.path.join(idir, f"{name}.json"), {"model": {"type": "minecraft:model", "model": f"{MOD}:item/jett/{name}"}})
+    # fumaça tingida: um modelo por agente (smoke_lump_<id>), usada por toda habilidade de fumaça
+    for agent in agents:
+        c = ((agent["color"] >> 16) & 255, (agent["color"] >> 8) & 255, agent["color"] & 255)
+        smoke_texture(c).save(os.path.join(tex, f'smoke_{agent["id"]}.png'))
+        name = f'smoke_lump_{agent["id"]}'
+        _w(os.path.join(mdir, f"{name}.json"), smoke_lump_model(f'smoke_{agent["id"]}'))
         _w(os.path.join(idir, f"{name}.json"), {"model": {"type": "minecraft:model", "model": f"{MOD}:item/jett/{name}"}})
     # ícones de HUD de TODAS as habilidades (usados no HUD novo e no loadout)
     for agent in agents:

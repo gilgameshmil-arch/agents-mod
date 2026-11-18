@@ -59,7 +59,7 @@ public class AgentsClient implements ClientModInitializer {
 
             AgentDef agent = ClientState.agent();
             if (agent == null) return;
-            if (ClientState.ammo() > 0) { // modo de tiro ativo: clique esquerdo dispara
+            if (ClientState.modeActive()) { // modo de tiro ativo: clique esquerdo dispara
                 while (client.options.keyAttack.consumeClick()) {
                     ClientPlayNetworking.send(new Net.ShotC2S());
                     client.player.swing(InteractionHand.MAIN_HAND);

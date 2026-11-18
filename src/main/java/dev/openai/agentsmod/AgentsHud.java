@@ -18,10 +18,10 @@ import java.util.Locale;
  * realce da tecla segurada e barra de munição do modo de tiro (facas da Blade Storm).
  */
 public final class AgentsHud implements HudElement {
-    private static final int W = 112;
-    private static final int TILE_H = 38;
-    private static final int GAP = 4;
-    private static final int HEAD_H = 28;
+    private static final int W = 86;
+    private static final int TILE_H = 24;
+    private static final int GAP = 2;
+    private static final int HEAD_H = 19;
 
     static int shade(int rgb, float f) {
         int r = (int) (((rgb >> 16) & 255) * f), g = (int) (((rgb >> 8) & 255) * f), b = (int) ((rgb & 255) * f);
@@ -64,20 +64,20 @@ public final class AgentsHud implements HudElement {
         }
         float partial = delta.getGameTimeDeltaPartialTick(false);
         double now = ClientState.ticks() + partial;
-        int total = HEAD_H + GAP + 4 * (TILE_H + GAP) + (ClientState.ammo() > 0 ? 22 : 0);
+        int total = HEAD_H + GAP + 4 * (TILE_H + GAP) + (ClientState.modeActive() ? 16 : 0);
         int x = sw - W - 6;
         int y = Math.max(4, sh / 2 - total / 2);
         int accent = 0xFF000000 | agent.color;
 
         // ---- cartão do agente
-        slanted(g, x, y, W, HEAD_H, 0xD00B0E15, 10);
-        slanted(g, x, y, 5, HEAD_H, accent, 10);
-        g.fill(x + 10, y + HEAD_H - 2, x + W, y + HEAD_H - 1, alpha(accent, 140));
-        g.drawString(mc.font, Component.translatable(agent.nameKey()).withStyle(s -> s.withBold(true)), x + 14, y + 4, 0xFFFFFFFF, false);
-        g.drawString(mc.font, Component.translatable(agent.roleKey()), x + 14, y + 16, shade(agent.color, 0.95f), false);
+        slanted(g, x, y, W, HEAD_H, 0xD00B0E15, 6);
+        slanted(g, x, y, 4, HEAD_H, accent, 6);
+        g.fill(x + 8, y + HEAD_H - 1, x + W, y + HEAD_H, alpha(accent, 140));
+        g.drawString(mc.font, Component.translatable(agent.nameKey()).withStyle(s -> s.withBold(true)), x + 11, y + 2, 0xFFFFFFFF, false);
+        g.drawString(mc.font, Component.translatable(agent.roleKey()), x + 11, y + 10, shade(agent.color, 0.95f), false);
         int owned = ClientState.unlockedCount(agent);
         for (int i = 0; i < 4; i++) {
-            g.fill(x + W - 44 + i * 10, y + 8, x + W - 37 + i * 10, y + 12, i < owned ? accent : 0xFF2B303B);
+            g.fill(x + W - 30 + i * 7, y + 5, x + W - 25 + i * 7, y + 8, i < owned ? accent : 0xFF2B303B);
         }
         y += HEAD_H + GAP;
 
@@ -86,68 +86,76 @@ public final class AgentsHud implements HudElement {
             AbilityDef d = agent.abilities[slot];
             boolean unlocked = ClientState.isUnlocked(d);
             double remaining = unlocked ? Math.max(0, ClientState.remainingTicks(slot) - partial) : 0;
-            boolean ready = unlocked && remaining <= 0;
+            boolean needKill = d.b("needs_kill", false);
+            boolean ready = unlocked && remaining <= 0 && (!needKill || ClientState.kills() > 0);
             boolean held = AgentsClient.keyFor(slot).isDown() && unlocked;
             double press = now - ClientState.pressedAt(slot);
             double flash = now - ClientState.flashAt(slot);
 
             // fundo e realce de seleção (tecla segurada)
-            slanted(g, x, y, W, TILE_H, held ? 0xE0202838 : 0xC00B0E15, 6);
+            slanted(g, x, y, W, TILE_H, held ? 0xE0202838 : 0xC00B0E15, 4);
             int edge = !unlocked ? 0xFF3A3D46 : ready ? accent : 0xFF77808E;
-            g.fill(x + 6, y + TILE_H - 1, x + W, y + TILE_H, alpha(edge, 200));
-            g.fill(x, y, x + 3, y + TILE_H, edge);
+            g.fill(x + 4, y + TILE_H - 1, x + W, y + TILE_H, alpha(edge, 200));
+            g.fill(x, y, x + 2, y + TILE_H, edge);
 
             // ícone 32x32 (arte própria de cada habilidade)
-            int ix = x + 8, iy = y + 3;
-            g.blit(RenderPipelines.GUI_TEXTURED, icon(d), ix, iy, 0f, 0f, 32, 32, 32, 32);
-            if (!unlocked) g.fill(ix, iy, ix + 32, iy + 32, 0xB0000000);
+            int ix = x + 6, iy = y + 2;
+            g.blit(RenderPipelines.GUI_TEXTURED, icon(d), ix, iy, 0f, 0f, 20, 20, 32, 32, 32, 32);
+            if (!unlocked) g.fill(ix, iy, ix + 20, iy + 20, 0xB0000000);
+            else if (needKill && remaining <= 0 && ClientState.kills() == 0) g.fill(ix, iy, ix + 20, iy + 20, 0x98000000);
             if (remaining > 0) { // cortina de recarga (desce) + segundos
                 float f = (float) Math.min(1.0, remaining / d.cooldownTicks);
-                g.fill(ix, iy, ix + 32, iy + Math.round(32 * f), 0xB8000000);
+                g.fill(ix, iy, ix + 32, iy + Math.round(20 * f), 0xB8000000);
                 String sec = String.format(Locale.ROOT, remaining >= 200 ? "%.0f" : "%.1f", remaining / 20.0);
-                g.drawString(mc.font, sec, ix + 16 - mc.font.width(sec) / 2, iy + 12, 0xFFFFFFFF, true);
+                g.drawString(mc.font, sec, ix + 10 - mc.font.width(sec) / 2, iy + 6, 0xFFFFFFFF, true);
             }
-            frame(g, ix - 1, iy - 1, 34, 34, ready ? accent : alpha(edge, 220));
+            frame(g, ix - 1, iy - 1, 22, 22, ready ? accent : alpha(edge, 220));
             if (press >= 0 && press < 7) { // pulso: contorno que se expande e some
-                int grow = (int) (press * 0.9);
-                frame(g, ix - 1 - grow, iy - 1 - grow, 34 + grow * 2, 34 + grow * 2, alpha(accent, (int) (230 - press * 32)));
+                int grow = (int) (press * 0.6);
+                frame(g, ix - 1 - grow, iy - 1 - grow, 22 + grow * 2, 22 + grow * 2, alpha(accent, (int) (230 - press * 32)));
             }
             if (flash >= 0 && flash < 10) { // recarga acabou: brilho branco
-                g.fill(ix, iy, ix + 32, iy + 32, alpha(0xFFFFFFFF, (int) (170 - flash * 17)));
+                g.fill(ix, iy, ix + 20, iy + 20, alpha(0xFFFFFFFF, (int) (170 - flash * 17)));
             }
 
-            // tecla em destaque + nome + estado
+            // tecla + nome (compacto)
             String key = AgentsClient.keyFor(slot).getTranslatedKeyMessage().getString();
-            int kw = Math.max(12, mc.font.width(key) + 6);
-            g.fill(x + 44, y + 4, x + 44 + kw, y + 16, ready ? accent : 0xFF2B303B);
-            g.drawString(mc.font, key, x + 44 + (kw - mc.font.width(key)) / 2, y + 6, ready ? 0xFF05060A : 0xFFC9CED8, false);
-            if (d.isUltimate()) g.drawString(mc.font, "ULT", x + 48 + kw, y + 6, 0xFFFFC857, false);
+            int kw = Math.max(9, mc.font.width(key) + 4);
+            g.fill(x + 30, y + 3, x + 30 + kw, y + 12, ready ? accent : 0xFF2B303B);
+            g.drawString(mc.font, key, x + 30 + (kw - mc.font.width(key)) / 2, y + 4, ready ? 0xFF05060A : 0xFFC9CED8, false);
+            if (d.isUltimate()) g.drawString(mc.font, "ULT", x + 33 + kw, y + 4, 0xFFFFC857, false);
             Component name = Component.translatable(d.nameKey());
-            g.drawString(mc.font, name, x + 44, y + 19, unlocked ? 0xFFFFFFFF : 0xFF7A7A82, false);
-            Component state = !unlocked ? Component.translatable("hud.agentsmod.locked")
-                    : ready ? Component.translatable("hud.agentsmod.ready") : Component.empty();
-            g.drawString(mc.font, state, x + 44, y + 28, ready ? accent : 0xFF8A93A0, false);
+            String nm = mc.font.plainSubstrByWidth(name.getString(), W - 33);
+            g.drawString(mc.font, nm, x + 30, y + 13, unlocked ? 0xFFFFFFFF : 0xFF7A7A82, false);
 
             // barra fina de recarga (progresso)
             if (remaining > 0) {
                 float done = 1f - (float) Math.min(1.0, remaining / d.cooldownTicks);
-                g.fill(x + 44, y + TILE_H - 5, x + W - 6, y + TILE_H - 3, 0xFF1B2030);
-                g.fill(x + 44, y + TILE_H - 5, x + 44 + Math.round((W - 50) * done), y + TILE_H - 3, accent);
+                g.fill(x + 30, y + TILE_H - 3, x + W - 4, y + TILE_H - 2, 0xFF1B2030);
+                g.fill(x + 30, y + TILE_H - 3, x + 30 + Math.round((W - 34) * done), y + TILE_H - 2, accent);
             }
             y += TILE_H + GAP;
         }
 
-        // ---- munição do modo de tiro (ex.: facas da Blade Storm)
-        if (ClientState.ammo() > 0) {
-            AbilityDef ult = agent.abilities[3];
-            int max = Math.max(1, ult.i("ammo", 5));
-            slanted(g, x, y, W, 18, 0xC00B0E15, 6);
-            g.drawString(mc.font, Component.translatable("hud.agentsmod.knives"), x + 10, y + 5, 0xFFC9CED8, false);
-            int px = x + W - 8 - max * 9;
-            for (int i = 0; i < max; i++) {
-                boolean on = i < ClientState.ammo();
-                g.fill(px + i * 9, y + 4, px + i * 9 + 6, y + 14, on ? accent : 0xFF2B303B);
-                if (on) g.fill(px + i * 9, y + 4, px + i * 9 + 6, y + 6, 0xFFFFFFFF);
+        // ---- munição do modo de tiro (facas da Blade Storm, pistola do Chamber...)
+        if (ClientState.modeActive()) {
+            AbilityDef md = agent.abilities[Math.min(3, ClientState.modeSlot())];
+            int max = Math.max(1, ClientState.modeMax());
+            slanted(g, x, y, W, 14, 0xC00B0E15, 4);
+            boolean gun = md.b("gun", false);
+            String label = gun ? (ClientState.reloading() ? "RECARREGANDO" : "MUNIÇÃO")
+                    : Component.translatable("hud.agentsmod.knives").getString();
+            g.drawString(mc.font, label, x + 8, y + 3, ClientState.reloading() ? 0xFFFFC857 : 0xFFC9CED8, false);
+            if (max <= 8) {
+                int px = x + W - 6 - max * 7;
+                for (int i = 0; i < max; i++) {
+                    boolean on = i < ClientState.ammo();
+                    g.fill(px + i * 7, y + 3, px + i * 7 + 5, y + 11, on ? accent : 0xFF2B303B);
+                    if (on) g.fill(px + i * 7, y + 3, px + i * 7 + 5, y + 5, 0xFFFFFFFF);
+                }
+            } else {
+                String n = ClientState.ammo() + "/" + max;
+                g.drawString(mc.font, n, x + W - 6 - mc.font.width(n), y + 3, accent, false);
             }
         }
     }

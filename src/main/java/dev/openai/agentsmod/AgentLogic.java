@@ -6,6 +6,7 @@ import dev.openai.agentsmod.Defs.AgentDef;
 import dev.openai.agentsmod.Defs.EffectSpec;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -75,6 +76,33 @@ public final class AgentLogic {
     private static final Map<UUID, Dash> DASHES = new HashMap<>();
     private static final Map<UUID, ModeState> MODES = new HashMap<>();
     private static final List<Effect> EFFECTS = new ArrayList<>();
+    /** Recarga a aplicar após a ativação atual (-1 = a recarga normal da habilidade). */
+    private static int cdOverride = -1;
+    private static final Map<UUID, Integer> KILLS = new HashMap<>();
+    private static final Map<UUID, Ndy> NDY = new HashMap<>();
+    private static final Map<UUID, Anchor> ANCHORS = new HashMap<>();
+    private static Vec3 lastImpact = null;
+
+    /** "Not Dead Yet": o jogador fica de pé como fantasma por alguns segundos; abater alguém o traz de volta. */
+    private static final class Ndy {
+        int ticksLeft;
+        final AbilityDef def;
+        Ndy(AbilityDef def) { this.def = def; this.ticksLeft = (int) (def.d("ndy_time", 12) * 20); }
+    }
+
+    /** Âncora de Rendezvous: marca um ponto; a segunda ativação volta até ele. */
+    private static final class Anchor {
+        final ServerLevel level;
+        final Vec3 pos;
+        final AbilityDef def;
+        final UUID display;
+        int ticksLeft;
+        int age = 0;
+        Anchor(ServerLevel level, Vec3 pos, AbilityDef def, UUID display) {
+            this.level = level; this.pos = pos; this.def = def; this.display = display;
+            this.ticksLeft = (int) (def.d("anchor_time", 45) * 20);
+        }
+    }
     /** Efeitos criados enquanto EFFECTS é percorrido entram aqui e são movidos depois. */
     private static final List<Effect> PENDING = new ArrayList<>();
     private static final List<WallEffect> WALLS = new ArrayList<>();
@@ -92,6 +120,8 @@ public final class AgentLogic {
             now++;
             tickDashes(server);
             tickModes(server);
+            tickNdy(server);
+            tickAnchors(server);
             EFFECTS.removeIf(effect -> !effect.tick(server));
             EFFECTS.addAll(PENDING);
             PENDING.clear();
@@ -105,6 +135,9 @@ public final class AgentLogic {
             PENDING.clear();
             DASHES.clear();
             MODES.clear();
+            KILLS.clear();
+            NDY.clear();
+            ANCHORS.clear();
             READY_AT.clear();
             now = 0;
         });
@@ -113,6 +146,17 @@ public final class AgentLogic {
             READY_AT.remove(handler.player.getUUID());
             DASHES.remove(handler.player.getUUID());
             MODES.remove(handler.player.getUUID());
+            KILLS.remove(handler.player.getUUID());
+            NDY.remove(handler.player.getUUID());
+            Anchor an = ANCHORS.remove(handler.player.getUUID());
+            if (an != null) FxDisplays.kill(an.level, an.display);
+        });
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
+                !(entity instanceof ServerPlayer sp && NDY.containsKey(sp.getUUID())));
+        ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) ->
+                !(entity instanceof ServerPlayer sp) || !tryNotDeadYet(sp));
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (source.getEntity() instanceof ServerPlayer killer && entity != killer) onKill(killer);
         });
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> sync(newPlayer));
     }
@@ -230,6 +274,17 @@ public final class AgentLogic {
         }
         long[] ready = READY_AT.computeIfAbsent(p.getUUID(), k -> new long[Defs.ABILITIES.size()]);
         if (ready[d.index] > now) return; // em recarga: o servidor decide, nunca o cliente
+        if (d.b("passive", false)) {
+            p.displayClientMessage(Component.translatable("message.agentsmod.passive"), true);
+            sync(p);
+            return;
+        }
+        if (d.b("needs_kill", false) && KILLS.getOrDefault(p.getUUID(), 0) <= 0) {
+            p.displayClientMessage(Component.translatable("message.agentsmod.need_kill"), true);
+            sync(p);
+            return;
+        }
+        cdOverride = -1;
 
         ServerLevel level = (ServerLevel) p.level();
         boolean ok = switch (d.type) {
@@ -243,7 +298,9 @@ public final class AgentLogic {
             case MODE -> mode(p, level, d);
         };
         if (ok) {
-            ready[d.index] = now + d.cooldownTicks;
+            ready[d.index] = now + (cdOverride >= 0 ? cdOverride : d.cooldownTicks);
+            cdOverride = -1;
+            if (d.b("needs_kill", false)) KILLS.merge(p.getUUID(), -1, Integer::sum);
             addEffects(p, d.effects("self_fx"), 0);
             if (d.has("launch_up") || d.has("launch_fwd")) launch(p, d.d("launch_up", 0), d.d("launch_fwd", 0));
             Fx3D.afterActivate(p, level, d, dirX, dirZ);
@@ -470,6 +527,7 @@ public final class AgentLogic {
     }
 
     private static boolean blink(ServerPlayer p, ServerLevel level, AbilityDef d) {
+        if (d.b("anchor", false)) return anchor(p, level, d);
         Vec3 eye = p.getEyePosition();
         Vec3 look = p.getLookAngle();
         double range = d.d("range", 12);
@@ -534,8 +592,13 @@ public final class AgentLogic {
 
     // ------------------------------------------------------------------ ZONE (área que dura)
 
+    /** Parte "de jogo" de uma fumaça que também causa dano/efeitos (ex.: Poison Cloud da Viper). */
+    static void smokeZone(ServerLevel level, UUID ownerId, AbilityDef d, Vec3 anchor) {
+        PENDING.add(new ZoneEffect(level, ownerId, d, anchor, false, null, 0));
+    }
+
     private static boolean zone(ServerPlayer p, ServerLevel level, AbilityDef d) {
-        if (d.s("vfx", "").equals("smoke")) return Fx3D.cloudburst(p, level, d);
+        if (d.s("vfx", "").equals("smoke")) return Fx3D.smoke(p, level, d);
         boolean self = d.s("center", "self").equals("self");
         Vec3 anchor = self ? p.position() : aimGround(p, level, d.d("range", 20));
         boolean follow = d.b("follow", self);
@@ -637,6 +700,7 @@ public final class AgentLogic {
         }
 
         Vec3 impact = target != null ? targetPoint : stop;
+        lastImpact = impact;
         boolean killed = false;
         if (target != null) {
             boolean head = targetPoint.y >= target.getEyeY() - 0.25;
@@ -693,6 +757,7 @@ public final class AgentLogic {
         int ammo;
         int ticksLeft;
         int cooldown = 0;
+        int reload = 0;
 
         ModeState(AbilityDef def) {
             this.def = def;
@@ -702,6 +767,19 @@ public final class AgentLogic {
     }
 
     private static boolean mode(ServerPlayer p, ServerLevel level, AbilityDef d) {
+        if (d.b("gun", false)) { // arma equipada: sem recarga de habilidade; apertar de novo guarda a arma
+            ModeState cur = MODES.get(p.getUUID());
+            cdOverride = 0;
+            if (cur != null && cur.def == d) {
+                MODES.remove(p.getUUID());
+                play(level, p.position(), "item.armor.equip_chain", 0.7f, 0.8f);
+                return true;
+            }
+            MODES.put(p.getUUID(), new ModeState(d));
+            play(level, p.position(), "item.armor.equip_iron", 0.9f, 1.3f);
+            play(level, p.position(), "block.piston.extend", 0.4f, 1.8f);
+            return true;
+        }
         MODES.put(p.getUUID(), new ModeState(d));
         if (d.s("vfx", "").equals("knives")) {
             Fx3D.startKnives(p, level, d);
@@ -726,6 +804,11 @@ public final class AgentLogic {
             ServerPlayer p = server.getPlayerList().getPlayer(entry.getKey());
             ModeState m = entry.getValue();
             if (m.cooldown > 0) m.cooldown--;
+            if (m.reload > 0 && --m.reload == 0 && p != null) {
+                m.ammo = m.def.i("ammo", 1);
+                play((ServerLevel) p.level(), p.position(), "item.crossbow.loading_end", 0.9f, 1.2f);
+                sync(p);
+            }
             if (p == null || !p.isAlive() || --m.ticksLeft <= 0) {
                 it.remove();
                 if (p != null) sync(p);
@@ -736,7 +819,7 @@ public final class AgentLogic {
     /** Clique de disparo com um modo ativo. Abate pode devolver a munição (refill). */
     public static void tryShoot(ServerPlayer p) {
         ModeState m = MODES.get(p.getUUID());
-        if (m == null || m.ammo <= 0 || m.cooldown > 0 || !p.isAlive() || p.isSpectator()) return;
+        if (m == null || m.ammo <= 0 || m.cooldown > 0 || m.reload > 0 || !p.isAlive() || p.isSpectator()) return;
         m.ammo--;
         m.cooldown = m.def.i("shot_cd", 5);
         ServerLevel level = (ServerLevel) p.level();
@@ -745,7 +828,13 @@ public final class AgentLogic {
             if (m.ammo <= 0) m.ticksLeft = Math.min(m.ticksLeft, 60); // tempo para as facas no ar acertarem
         } else {
             boolean killed = fire(p, level, m.def, Shot.of(m.def));
-            if (killed && m.def.b("refill", false)) {
+            if (killed && m.def.has("kill_radius")) killField(level, p, m.def);
+            if (m.def.b("gun", false)) {
+                if (m.ammo <= 0) {
+                    m.reload = m.def.i("reload", 50);
+                    play(level, p.position(), "item.crossbow.loading_start", 0.9f, 1.0f);
+                }
+            } else if (killed && m.def.b("refill", false)) {
                 m.ammo = m.def.i("ammo", 1);
                 m.ticksLeft = (int) (m.def.d("duration", 15) * 20);
                 play(level, p.position(), "entity.player.levelup", 0.8f, 1.5f);
@@ -754,6 +843,130 @@ public final class AgentLogic {
             }
         }
         sync(p);
+    }
+
+    // ------------------------------------------------------------------ abates, Not Dead Yet, âncora
+
+    private static void onKill(ServerPlayer killer) {
+        KILLS.merge(killer.getUUID(), 1, (a, b) -> Math.min(3, a + b));
+        Ndy n = NDY.remove(killer.getUUID());
+        if (n != null) { // abateu enquanto "morta": volta à vida
+            killer.setHealth(killer.getMaxHealth() * 0.6f);
+            killer.removeEffect(net.minecraft.world.effect.MobEffects.INVISIBILITY);
+            play((ServerLevel) killer.level(), killer.position(), "item.totem.use", 0.8f, 1.4f);
+            puff((ServerLevel) killer.level(), ParticleTypes.HEART, killer.position().add(0, 1, 0), 14, 0.5, 0.05);
+            killer.displayClientMessage(Component.translatable("message.agentsmod.revived"), true);
+        }
+        sync(killer);
+    }
+
+    /** @return true se a morte deve ser cancelada (habilidade passiva "ndy" pronta). */
+    private static boolean tryNotDeadYet(ServerPlayer p) {
+        if (NDY.containsKey(p.getUUID())) return true;
+        AgentDef agent = selectedAgent(p);
+        if (agent == null) return false;
+        for (AbilityDef d : agent.abilities) {
+            if (!d.b("ndy", false) || !isUnlocked(p, d)) continue;
+            long[] ready = READY_AT.computeIfAbsent(p.getUUID(), k -> new long[Defs.ABILITIES.size()]);
+            if (ready[d.index] > now) return false;
+            ready[d.index] = now + d.cooldownTicks;
+            NDY.put(p.getUUID(), new Ndy(d));
+            p.setHealth(1.0f);
+            addEffects(p, d.effects("self_fx"), 0);
+            addEffects(p, List.of(new EffectSpec("invisibility", (int) (d.d("ndy_time", 12) * 20), 0),
+                    new EffectSpec("speed", (int) (d.d("ndy_time", 12) * 20), 1)), 0);
+            ServerLevel level = (ServerLevel) p.level();
+            play(level, p.position(), "entity.wither.spawn", 0.4f, 1.8f);
+            puff(level, ParticleTypes.SOUL, p.position().add(0, 1, 0), 24, 0.5, 0.06);
+            p.displayClientMessage(Component.translatable("message.agentsmod.ndy", (int) d.d("ndy_time", 12)), true);
+            sync(p);
+            return true;
+        }
+        return false;
+    }
+
+    private static void tickNdy(MinecraftServer server) {
+        Iterator<Map.Entry<UUID, Ndy>> it = NDY.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<UUID, Ndy> e = it.next();
+            ServerPlayer p = server.getPlayerList().getPlayer(e.getKey());
+            if (p == null) { it.remove(); continue; }
+            if (--e.getValue().ticksLeft <= 0) {
+                it.remove();
+                p.kill((ServerLevel) p.level()); // não abateu a tempo: morre de verdade
+            } else if (e.getValue().ticksLeft % 8 == 0) {
+                puff((ServerLevel) p.level(), ParticleTypes.SOUL, p.position().add(0, 1, 0), 2, 0.3, 0.02);
+            }
+        }
+    }
+
+    /** Rendezvous: 1º uso marca a âncora (sem recarga); 2º uso volta até ela. */
+    private static boolean anchor(ServerPlayer p, ServerLevel level, AbilityDef d) {
+        MinecraftServer server = level.getServer();
+        Anchor a = ANCHORS.get(p.getUUID());
+        if (a == null) {
+            Vec3 pos = p.position();
+            UUID disp = FxDisplays.spawn(server, level, visualCenter("disc", pos, 1.8), model(d, "disc"), 0.2);
+            if (disp != null) FxDisplays.animate(server, level, disp, 0, 1, 0, 0, 1.8, 8);
+            ANCHORS.put(p.getUUID(), new Anchor(level, pos, d, disp));
+            cdOverride = 0;
+            play(level, pos, "block.end_portal_frame.fill", 1.0f, 1.2f);
+            puff(level, particle(d), pos.add(0, 0.3, 0), 20, 0.4, 0.04);
+            p.displayClientMessage(Component.translatable("message.agentsmod.anchor_set"), true);
+            return true;
+        }
+        if (a.level != level || a.pos.distanceTo(p.position()) > d.d("range", 30)) {
+            p.displayClientMessage(Component.translatable("message.agentsmod.anchor_far"), true);
+            return false;
+        }
+        Vec3 from = p.position();
+        puff(level, particle(d), from.add(0, 1, 0), 30, 0.4, 0.05);
+        play(level, from, d.s("sound", "entity.enderman.teleport"), 1.0f, 1.0f);
+        FxDisplays.run(server, level, "tp " + p.getUUID() + " " + num(a.pos.x) + " " + num(a.pos.y) + " " + num(a.pos.z));
+        p.fallDistance = 0;
+        puff(level, particle(d), a.pos.add(0, 1, 0), 30, 0.4, 0.05);
+        play(level, a.pos, d.s("sound", "entity.enderman.teleport"), 1.0f, 1.2f);
+        FxDisplays.kill(level, a.display);
+        ANCHORS.remove(p.getUUID());
+        return true;
+    }
+
+    private static void tickAnchors(MinecraftServer server) {
+        Iterator<Map.Entry<UUID, Anchor>> it = ANCHORS.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<UUID, Anchor> e = it.next();
+            Anchor a = e.getValue();
+            ServerPlayer p = server.getPlayerList().getPlayer(e.getKey());
+            if (p == null || !p.isAlive() || --a.ticksLeft <= 0) {
+                it.remove();
+                FxDisplays.kill(a.level, a.display);
+                if (p != null) { // a recarga só começa quando a âncora some
+                    READY_AT.computeIfAbsent(p.getUUID(), k -> new long[Defs.ABILITIES.size()])[a.def.index] = now + a.def.cooldownTicks;
+                    sync(p);
+                }
+                continue;
+            }
+            a.age++;
+            if (a.display != null && a.age % 4 == 0) {
+                FxDisplays.animate(server, level0(a), a.display, 0, 1, 0, a.age * 0.05, 1.8, 4);
+            }
+            if (a.age % 10 == 0) puff(a.level, ParticleTypes.REVERSE_PORTAL, a.pos.add(0, 0.6, 0), 3, 0.3, 0.02);
+        }
+    }
+
+    private static ServerLevel level0(Anchor a) { return a.level; }
+
+    /** Tour de Force: ao abater, abre um campo de lentidão no ponto do tiro. */
+    private static void killField(ServerLevel level, ServerPlayer p, AbilityDef d) {
+        if (lastImpact == null) return;
+        double r = d.d("kill_radius", 6);
+        for (LivingEntity e : near(level, lastImpact, r)) if (isFoe(p, e)) addEffects(e, d.effects("kill_effects"), 0);
+        ParticleOptions pt = particle(d);
+        ring(level, pt, lastImpact, r, 40, 0.1);
+        puff(level, pt, lastImpact, 20, r * 0.3, 0.05);
+        play(level, lastImpact, "block.beacon.deactivate", 1.0f, 0.6f);
+        UUID display = FxDisplays.spawn(level.getServer(), level, visualCenter("disc", lastImpact, r * 2), model(d, "disc"), 0.3);
+        if (display != null) PENDING.add(new PulseEffect(level, display, r * 2));
     }
 
     // ------------------------------------------------------------------ sincronização
@@ -771,8 +984,12 @@ public final class AgentLogic {
             cooldowns.add((int) Math.max(0, Math.min(remaining, 1_000_000)));
         }
         ModeState m = MODES.get(p.getUUID());
-        ServerPlayNetworking.send(p, new Net.StateS2C(agent == null ? -1 : agent.index, unlocked, cooldowns,
-                m == null ? 0 : m.ammo));
+        int packed = Math.min(7, KILLS.getOrDefault(p.getUUID(), 0)) << 22;
+        if (m != null) {
+            packed |= (1 << 20) | (m.reload > 0 ? 1 << 21 : 0) | (m.def.slot << 16)
+                    | (Math.min(255, m.def.i("ammo", 1)) << 8) | Math.min(255, Math.max(0, m.ammo));
+        }
+        ServerPlayNetworking.send(p, new Net.StateS2C(agent == null ? -1 : agent.index, unlocked, cooldowns, packed));
     }
 
     // ------------------------------------------------------------------ efeitos com duração

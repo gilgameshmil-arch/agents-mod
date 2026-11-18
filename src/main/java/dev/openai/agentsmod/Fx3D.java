@@ -328,6 +328,21 @@ final class Fx3D {
         return true;
     }
 
+    /** Fumaça de qualquer agente: arremessada (canister) ou posta direto no ponto mirado, com nuvem 3D tingida na cor do agente. */
+    static boolean smoke(ServerPlayer p, ServerLevel level, AbilityDef d) {
+        if (d.b("throw", true)) return cloudburst(p, level, d);
+        Vec3 anchor = AgentLogic.aimGround(p, level, d.d("range", 30));
+        AgentLogic.play(level, p.position(), "entity.snowball.throw", 0.8f, 1.3f);
+        AgentLogic.play(level, anchor, "entity.generic.extinguish_fire", 1.2f, 0.7f);
+        openSmoke(level, p.getUUID(), d, anchor);
+        return true;
+    }
+
+    static void openSmoke(ServerLevel level, UUID ownerId, AbilityDef d, Vec3 anchor) {
+        AgentLogic.addEffect(new SmokeCloud(level, ownerId, d, anchor));
+        if (d.has("damage") || d.has("effects") || d.has("ally_effects")) AgentLogic.smokeZone(level, ownerId, d, anchor);
+    }
+
     private static void landCanister(MinecraftServer server, ServerLevel level, AbilityDef d, UUID ownerId, Flight f, Vec3 point) {
         // cai até o chão sob o ponto de impacto (se bateu numa parede ou em uma entidade)
         Vec3 from = point.subtract(f.vel.normalize().scale(0.3)).add(0, 0.4, 0);
@@ -337,7 +352,7 @@ final class Fx3D {
         Vec3 anchor = down.getType() == HitResult.Type.MISS ? point : down.getLocation();
         AgentLogic.play(level, anchor, "block.glass.break", 0.9f, 1.4f);
         AgentLogic.play(level, anchor, "entity.generic.extinguish_fire", 1.2f, 0.7f);
-        AgentLogic.addEffect(new SmokeCloud(level, ownerId, d, anchor));
+        openSmoke(level, ownerId, d, anchor);
     }
 
     /** Nuvem 3D: ~16 tufos (modelo smoke_lump) que brotam em sequência, giram, "respiram" e se dissipam; anel de choque no impacto. */
@@ -347,6 +362,7 @@ final class Fx3D {
         final Vec3 anchor;
         final double radius;
         final int duration;
+        final String lump;
         final List<UUID> lumps = new ArrayList<>();
         final List<Vec3> offsets = new ArrayList<>();
         final List<Double> sizes = new ArrayList<>();
@@ -360,6 +376,7 @@ final class Fx3D {
             this.owner = owner;
             this.anchor = anchor;
             this.radius = d.d("radius", 3.2);
+            this.lump = mdl("smoke_lump_" + d.s("smoke", "jett"));
             this.duration = Math.max(40, (int) (d.d("duration", 7.5) * 20));
             Random rnd = new Random((long) (anchor.x * 31 + anchor.z * 17) ^ 0x5EEDL);
             int n = 16;
@@ -391,7 +408,7 @@ final class Fx3D {
                 int born = delays.get(i);
                 if (age == born) {
                     Vec3 o = offsets.get(i);
-                    UUID id = FxDisplays.spawn(server, level, anchor.add(o.x * 0.3, 0.2, o.z * 0.3), mdl("smoke_lump"), 0.1,
+                    UUID id = FxDisplays.spawn(server, level, anchor.add(o.x * 0.3, 0.2, o.z * 0.3), lump, 0.1,
                             0, 0, 0, 1, 5);
                     lumps.add(id);
                     if (id != null) {

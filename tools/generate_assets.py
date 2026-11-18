@@ -69,7 +69,7 @@ AGENTS = [
     ]),
     dict(id="viper", name="Viper", role="controller", color=0x3BD16F, sig="fermented_spider_eye", particle="witch", abilities=[
         A("C", "Snake Bite", 16, "ZONE", center="target", range=24, throw=True, radius=3, duration=6, damage=4, effects=[E("weakness", 3)], shape="disc"),
-        A("Q", "Poison Cloud", 18, "ZONE", center="target", range=24, throw=True, radius=4, duration=12, shape="orb"),
+        A("Q", "Poison Cloud", 18, "ZONE", center="target", range=24, throw=True, radius=4, duration=12, damage=3, effects=[E("weakness", 2)], vfx="smoke"),
         A("E", "Toxic Screen", 30, "WALL", along=True, width=11, height=3, duration=14, block="lime_stained_glass", damage=2),
         A("X", "Viper's Pit", 100, "ZONE", center="self", radius=10, duration=14, follow=False, damage=3,
           effects=[E("weakness", 3, 1), E("slowness", 3)], shape="dome"),
@@ -78,13 +78,13 @@ AGENTS = [
         A("C", "Stim Beacon", 20, "ZONE", center="target", range=22, throw=True, radius=5, duration=8,
           ally_effects=[E("speed", 3, 1), E("haste", 3, 1)], shape="disc", particle="end_rod"),
         A("Q", "Incendiary", 20, "ZONE", center="target", range=26, throw=True, radius=4, duration=7, damage=4, ignite=2, shape="disc"),
-        A("E", "Sky Smoke", 28, "ZONE", center="target", range=40, throw=False, radius=3, duration=12, shape="orb", particle="cloud"),
+        A("E", "Sky Smoke", 28, "ZONE", center="target", range=40, throw=False, radius=4, duration=12, vfx="smoke"),
         A("X", "Orbital Strike", 100, "ZONE", center="target", range=60, throw=False, radius=5, duration=6, damage=9, ignite=3, shape="pillar"),
     ]),
     dict(id="omen", name="Omen", role="controller", color=0x7B4DFF, sig="ender_pearl", particle="portal", abilities=[
         A("C", "Shrouded Step", 12, "BLINK", range=12),
         A("Q", "Paranoia", 24, "AREA", center="target", range=14, throw=False, radius=6, effects=[E("blindness", 3)], shape="orb", particle="smoke"),
-        A("E", "Dark Cover", 28, "ZONE", center="target", range=28, throw=True, radius=3, duration=10, shape="orb", particle="large_smoke"),
+        A("E", "Dark Cover", 28, "ZONE", center="target", range=28, throw=True, radius=4, duration=10, vfx="smoke"),
         A("X", "From the Shadows", 100, "BLINK", range=60, self_fx=[E("invisibility", 3)]),
     ]),
     dict(id="killjoy", name="Killjoy", role="sentinel", color=0xF2D43A, sig="redstone_torch", particle="electric_spark", abilities=[
@@ -107,8 +107,8 @@ AGENTS = [
     ]),
     dict(id="reyna", name="Reyna", role="duelist", color=0xC653E8, sig="purple_dye", particle="sculk_soul", abilities=[
         A("C", "Leer", 18, "AREA", center="target", range=24, throw=False, radius=3, effects=[E("blindness", 3)], shape="orb"),
-        A("Q", "Devour", 10, "AREA", center="self", radius=1, heal=8, ally_effects=[E("regeneration", 3, 1)], shape="orb"),
-        A("E", "Dismiss", 20, "DASH", speed=1.8, ticks=4, self_fx=[E("invisibility", 2)]),
+        A("Q", "Devour", 1, "AREA", center="self", radius=1, needs_kill=True, heal=10, ally_effects=[E("regeneration", 3, 1)], shape="orb"),
+        A("E", "Dismiss", 1, "DASH", speed=1.8, ticks=4, needs_kill=True, self_fx=[E("invisibility", 2)]),
         A("X", "Empress", 90, "AREA", center="self", radius=1, self_fx=[E("speed", 14, 1), E("strength", 14), E("regeneration", 14, 1)], shape="ring"),
     ]),
     dict(id="raze", name="Raze", role="duelist", color=0xFF9A2E, sig="fire_charge", particle="flame", abilities=[
@@ -138,7 +138,7 @@ AGENTS = [
     dict(id="astra", name="Astra", role="controller", color=0xB06BFF, sig="glowstone_dust", particle="end_rod", abilities=[
         A("C", "Gravity Well", 25, "ZONE", center="target", range=30, throw=False, radius=5, duration=3, knock=-0.5, effects=[E("weakness", 2, 1)], shape="orb", particle="reverse_portal"),
         A("Q", "Nova Pulse", 25, "AREA", center="target", range=30, throw=False, radius=4, effects=[E("slowness", 2, 4), E("nausea", 2)], shape="orb"),
-        A("E", "Nebula", 30, "ZONE", center="target", range=40, throw=False, radius=3, duration=10, shape="orb"),
+        A("E", "Nebula", 30, "ZONE", center="target", range=40, throw=False, radius=4, duration=10, vfx="smoke"),
         A("X", "Cosmic Divide", 110, "WALL", along=True, width=15, height=6, duration=12, block="purple_stained_glass"),
     ]),
     dict(id="kayo", name="KAY/O", role="initiator", color=0x58D6D6, sig="copper_ingot", particle="electric_spark", abilities=[
@@ -149,10 +149,12 @@ AGENTS = [
           self_fx=[E("speed", 10, 1), E("resistance", 10, 1)], shape="dome"),
     ]),
     dict(id="chamber", name="Chamber", role="sentinel", color=0xE5C46B, sig="gold_nugget", particle="firework", abilities=[
-        A("C", "Trademark", 20, "ZONE", center="target", range=20, throw=True, radius=4, duration=20, effects=[E("slowness", 2, 2), E("glowing", 2)], shape="disc"),
-        A("Q", "Headhunter", 5, "BEAM", range=70, damage=8, head=2, shape="bolt"),
-        A("E", "Rendezvous", 25, "BLINK", range=10),
-        A("X", "Tour de Force", 100, "MODE", ammo=1, duration=15, body_dmg=20, head_kill=True, range=100, shot_cd=20, shape="bolt"),
+        A("C", "Trademark", 25, "ZONE", center="target", range=20, throw=True, radius=4, duration=30,
+          effects=[E("slowness", 2, 2), E("glowing", 3)], shape="cube", size=0.9),
+        A("Q", "Headhunter", 0, "MODE", gun=True, ammo=8, reload=50, duration=3600, body_dmg=7, head=3, range=70, shot_cd=8, shape="bolt"),
+        A("E", "Rendezvous", 30, "BLINK", anchor=True, range=30, anchor_time=45, shape="disc"),
+        A("X", "Tour de Force", 100, "MODE", ammo=5, duration=30, body_dmg=20, head_kill=True, range=100, shot_cd=26,
+          kill_radius=7, kill_effects=[E("slowness", 4, 3)], shape="bolt"),
     ]),
     dict(id="neon", name="Neon", role="duelist", color=0x2E8BFF, sig="sugar", particle="electric_spark", abilities=[
         A("C", "Fast Lane", 20, "WALL", along=True, width=12, height=2, duration=6, block="cyan_stained_glass", effects=[E("slowness", 1, 1)]),
@@ -192,10 +194,11 @@ AGENTS = [
           effects=[E("weakness", 3, 1), E("slowness", 3, 1)], self_fx=[E("strength", 12, 1), E("absorption", 12, 2)], shape="dome"),
     ]),
     dict(id="clove", name="Clove", role="controller", color=0xFF8FD1, sig="bone_meal", particle="heart", abilities=[
-        A("C", "Pick-me-up", 12, "AREA", center="self", radius=1, self_fx=[E("absorption", 8, 2), E("speed", 6, 1)], shape="orb"),
+        A("C", "Pick-me-up", 1, "AREA", center="self", radius=1, needs_kill=True, self_fx=[E("absorption", 10, 2), E("speed", 6, 1)], shape="orb"),
         A("Q", "Meddle", 20, "AREA", center="target", range=22, throw=True, radius=4, damage=5, effects=[E("weakness", 4, 1)], shape="orb"),
-        A("E", "Ruse", 28, "ZONE", center="target", range=26, throw=True, radius=3.5, duration=9, shape="orb", particle="smoke"),
-        A("X", "Not Dead Yet", 100, "AREA", center="self", radius=1, heal=10, self_fx=[E("regeneration", 12, 2), E("resistance", 12, 1)], shape="star"),
+        A("E", "Ruse", 8, "ZONE", center="target", range=26, throw=False, radius=4, duration=13, vfx="smoke"),
+        A("X", "Not Dead Yet", 100, "AREA", center="self", radius=1, passive=True, ndy=True, ndy_time=12,
+          self_fx=[E("regeneration", 8, 2), E("resistance", 8, 1)], shape="star"),
     ]),
     dict(id="vyse", name="Vyse", role="sentinel", color=0x9FD4E8, sig="vine", particle="crit", abilities=[
         A("C", "Razorvine", 20, "ZONE", center="target", range=20, throw=False, radius=3.5, duration=10, damage=4, effects=[E("slowness", 2, 1)], shape="disc"),
@@ -224,7 +227,7 @@ AGENTS = [
     dict(id="miks", name="Miks", role="controller", color=0xFF4D8B, sig="note_block", particle="note", abilities=[
         A("C", "M-Pulse", 20, "ZONE", center="target", range=22, throw=True, radius=5, duration=6, heal=2, effects=[E("slowness", 2, 1), E("nausea", 2)], shape="disc"),
         A("Q", "Harmonize", 25, "AREA", center="self", radius=12, ally_effects=[E("speed", 8, 1), E("strength", 8)], shape="ring"),
-        A("E", "Waveform", 28, "ZONE", center="target", range=28, throw=True, radius=3, duration=8, shape="orb"),
+        A("E", "Waveform", 28, "ZONE", center="target", range=30, throw=False, radius=4, duration=8, vfx="smoke"),
         A("X", "Bassquake", 100, "AREA", center="target", range=20, throw=False, radius=9, effects=[E("slowness", 5, 3), E("weakness", 5, 1), E("nausea", 5)], knock=1.5, shape="ring", particle="sonic_boom"),
     ]),
     dict(id="hush", name="Hush", role="duelist", color=0xE8A6FF, sig="phantom_membrane", particle="end_rod", abilities=[
@@ -285,6 +288,8 @@ def normalize():
             t = ab["type"]
             ab.setdefault("particle", agent["particle"])
             ab.setdefault("sound", DEFAULT_SOUND[t])
+            if ab.get("vfx") == "smoke":
+                ab.setdefault("smoke", agent["id"])
             if t == "MODE":
                 ab.setdefault("shape", "bolt")
             if t == "BEAM":
@@ -651,6 +656,22 @@ def describe(ab, lang):
         selfpart()
     if t in ("DASH", "LEAP", "BLINK") and ab.get("self_fx"):
         selfpart()
+    if ab.get("vfx") == "smoke":
+        out.append("Fumaça 3D: bloqueia a visão da área." if pt else "3D smoke: blocks sight across the area.")
+    if ab.get("anchor"):
+        out.append((f"1º uso: marca um ponto. 2º uso (até {g(ab['range'])} blocos, {g(ab['anchor_time'])}s): volta ao ponto." if pt else
+                    f"1st use: plants an anchor. 2nd use (within {g(ab['range'])} blocks, {g(ab['anchor_time'])}s): teleports back."))
+    if ab.get("gun"):
+        out.append((f"Arma equipada: {ab['ammo']} balas, SEM recarga entre tiros; recarrega sozinha ao esvaziar ({g(ab['reload'] / 20)}s). Aperte de novo para guardar."
+                    if pt else f"Equips a pistol: {ab['ammo']} rounds, NO cooldown between shots; auto-reloads when empty ({g(ab['reload'] / 20)}s). Press again to holster."))
+    if ab.get("kill_radius"):
+        out.append((f"Ao abater: campo de lentidão de raio {g(ab['kill_radius'])} no ponto da morte." if pt else
+                    f"On kill: slowing field of radius {g(ab['kill_radius'])} at the kill."))
+    if ab.get("needs_kill"):
+        out.append("Só pode ser usada depois de abater um inimigo." if pt else "Usable only after getting a kill.")
+    if ab.get("ndy"):
+        out.append((f"Passiva: ao morrer, você fica {g(ab['ndy_time'])}s de pé como fantasma; se abater alguém nesse tempo, volta à vida; se não, morre."
+                    if pt else f"Passive: when you would die you linger {g(ab['ndy_time'])}s as a ghost; get a kill in time to come back, or die."))
     return " ".join(out)
 
 
@@ -707,6 +728,12 @@ def emit_lang():
         "gui.agentsmod.swap_ready": "TROCA LIBERADA",
         "gui.agentsmod.need_contract": "Requer Contrato de Reatribuição",
         "hud.agentsmod.knives": "FACAS",
+        "message.agentsmod.passive": "Esta habilidade é passiva: ativa sozinha.",
+        "message.agentsmod.need_kill": "Precisa de um abate para usar.",
+        "message.agentsmod.revived": "De volta à vida!",
+        "message.agentsmod.ndy": "NOT DEAD YET: abata alguém em %s s para voltar à vida!",
+        "message.agentsmod.anchor_set": "Âncora marcada. Aperte de novo para voltar até ela.",
+        "message.agentsmod.anchor_far": "Âncora fora de alcance.",
     }
     en = {
         "itemGroup.agentsmod.main": "Agents Mod",
@@ -735,6 +762,12 @@ def emit_lang():
         "gui.agentsmod.swap_ready": "SWAP READY",
         "gui.agentsmod.need_contract": "Requires Reassignment Contract",
         "hud.agentsmod.knives": "KNIVES",
+        "message.agentsmod.passive": "This ability is passive: it triggers on its own.",
+        "message.agentsmod.need_kill": "You need a kill to use this.",
+        "message.agentsmod.revived": "Back from the dead!",
+        "message.agentsmod.ndy": "NOT DEAD YET: get a kill within %s s to come back!",
+        "message.agentsmod.anchor_set": "Anchor placed. Press again to return to it.",
+        "message.agentsmod.anchor_far": "Anchor out of range.",
     }
     for r, (rp, re_) in ROLES.items():
         pt[f"role.agentsmod.{r}"] = rp

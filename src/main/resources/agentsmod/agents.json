@@ -74,6 +74,7 @@
           "cd_ticks": 300,
           "particle": "cloud",
           "sound": "block.beacon.activate",
+          "smoke": "jett",
           "shape": "",
           "recipe": [
             [
@@ -484,11 +485,21 @@
           "throw": true,
           "radius": 4,
           "duration": 12,
-          "shape": "orb",
+          "damage": 3,
+          "effects": [
+            [
+              "weakness",
+              2,
+              0
+            ]
+          ],
+          "vfx": "smoke",
           "id": "viper_poison_cloud",
           "cd_ticks": 360,
           "particle": "witch",
           "sound": "block.beacon.activate",
+          "smoke": "viper",
+          "shape": "",
           "recipe": [
             [
               "minecraft:fermented_spider_eye",
@@ -663,13 +674,15 @@
           "center": "target",
           "range": 40,
           "throw": false,
-          "radius": 3,
+          "radius": 4,
           "duration": 12,
-          "shape": "orb",
-          "particle": "cloud",
+          "vfx": "smoke",
           "id": "brimstone_sky_smoke",
           "cd_ticks": 560,
+          "particle": "flame",
           "sound": "block.beacon.activate",
+          "smoke": "brimstone",
+          "shape": "",
           "recipe": [
             [
               "minecraft:gunpowder",
@@ -791,13 +804,15 @@
           "center": "target",
           "range": 28,
           "throw": true,
-          "radius": 3,
+          "radius": 4,
           "duration": 10,
-          "shape": "orb",
-          "particle": "large_smoke",
+          "vfx": "smoke",
           "id": "omen_dark_cover",
           "cd_ticks": 560,
+          "particle": "portal",
           "sound": "block.beacon.activate",
+          "smoke": "omen",
+          "shape": "",
           "recipe": [
             [
               "minecraft:ender_pearl",
@@ -1344,11 +1359,12 @@
         {
           "slot": 1,
           "name": "Devour",
-          "cd": 10,
+          "cd": 1,
           "type": "AREA",
           "center": "self",
           "radius": 1,
-          "heal": 8,
+          "needs_kill": true,
+          "heal": 10,
           "ally_effects": [
             [
               "regeneration",
@@ -1358,7 +1374,7 @@
           ],
           "shape": "orb",
           "id": "reyna_devour",
-          "cd_ticks": 200,
+          "cd_ticks": 20,
           "particle": "sculk_soul",
           "sound": "entity.firework_rocket.blast",
           "recipe": [
@@ -1379,10 +1395,11 @@
         {
           "slot": 2,
           "name": "Dismiss",
-          "cd": 20,
+          "cd": 1,
           "type": "DASH",
           "speed": 1.8,
           "ticks": 4,
+          "needs_kill": true,
           "self_fx": [
             [
               "invisibility",
@@ -1391,7 +1408,7 @@
             ]
           ],
           "id": "reyna_dismiss",
-          "cd_ticks": 400,
+          "cd_ticks": 20,
           "particle": "sculk_soul",
           "sound": "entity.breeze.slide",
           "shape": "",
@@ -2129,13 +2146,15 @@
           "center": "target",
           "range": 40,
           "throw": false,
-          "radius": 3,
+          "radius": 4,
           "duration": 10,
-          "shape": "orb",
+          "vfx": "smoke",
           "id": "astra_nebula",
           "cd_ticks": 600,
           "particle": "end_rod",
           "sound": "block.beacon.activate",
+          "smoke": "astra",
+          "shape": "",
           "recipe": [
             [
               "minecraft:glowstone_dust",
@@ -2362,13 +2381,13 @@
         {
           "slot": 0,
           "name": "Trademark",
-          "cd": 20,
+          "cd": 25,
           "type": "ZONE",
           "center": "target",
           "range": 20,
           "throw": true,
           "radius": 4,
-          "duration": 20,
+          "duration": 30,
           "effects": [
             [
               "slowness",
@@ -2377,13 +2396,14 @@
             ],
             [
               "glowing",
-              2,
+              3,
               0
             ]
           ],
-          "shape": "disc",
+          "shape": "cube",
+          "size": 0.9,
           "id": "chamber_trademark",
-          "cd_ticks": 400,
+          "cd_ticks": 500,
           "particle": "firework",
           "sound": "block.beacon.activate",
           "recipe": [
@@ -2400,16 +2420,21 @@
         {
           "slot": 1,
           "name": "Headhunter",
-          "cd": 5,
-          "type": "BEAM",
+          "cd": 0,
+          "type": "MODE",
+          "gun": true,
+          "ammo": 8,
+          "reload": 50,
+          "duration": 3600,
+          "body_dmg": 7,
+          "head": 3,
           "range": 70,
-          "damage": 8,
-          "head": 2,
+          "shot_cd": 8,
           "shape": "bolt",
           "id": "chamber_headhunter",
-          "cd_ticks": 100,
+          "cd_ticks": 0,
           "particle": "firework",
-          "sound": "entity.arrow.shoot",
+          "sound": "block.beacon.activate",
           "recipe": [
             [
               "minecraft:gold_nugget",
@@ -2428,14 +2453,16 @@
         {
           "slot": 2,
           "name": "Rendezvous",
-          "cd": 25,
+          "cd": 30,
           "type": "BLINK",
-          "range": 10,
+          "anchor": true,
+          "range": 30,
+          "anchor_time": 45,
+          "shape": "disc",
           "id": "chamber_rendezvous",
-          "cd_ticks": 500,
+          "cd_ticks": 600,
           "particle": "firework",
           "sound": "entity.enderman.teleport",
-          "shape": "",
           "recipe": [
             [
               "minecraft:gold_nugget",
@@ -2456,12 +2483,20 @@
           "name": "Tour de Force",
           "cd": 100,
           "type": "MODE",
-          "ammo": 1,
-          "duration": 15,
+          "ammo": 5,
+          "duration": 30,
           "body_dmg": 20,
           "head_kill": true,
           "range": 100,
-          "shot_cd": 20,
+          "shot_cd": 26,
+          "kill_radius": 7,
+          "kill_effects": [
+            [
+              "slowness",
+              4,
+              3
+            ]
+          ],
           "shape": "bolt",
           "id": "chamber_tour_de_force",
           "cd_ticks": 2000,
@@ -3430,14 +3465,15 @@
         {
           "slot": 0,
           "name": "Pick-me-up",
-          "cd": 12,
+          "cd": 1,
           "type": "AREA",
           "center": "self",
           "radius": 1,
+          "needs_kill": true,
           "self_fx": [
             [
               "absorption",
-              8,
+              10,
               2
             ],
             [
@@ -3448,7 +3484,7 @@
           ],
           "shape": "orb",
           "id": "clove_pick_me_up",
-          "cd_ticks": 240,
+          "cd_ticks": 20,
           "particle": "heart",
           "sound": "entity.firework_rocket.blast",
           "recipe": [
@@ -3502,18 +3538,20 @@
         {
           "slot": 2,
           "name": "Ruse",
-          "cd": 28,
+          "cd": 8,
           "type": "ZONE",
           "center": "target",
           "range": 26,
-          "throw": true,
-          "radius": 3.5,
-          "duration": 9,
-          "shape": "orb",
-          "particle": "smoke",
+          "throw": false,
+          "radius": 4,
+          "duration": 13,
+          "vfx": "smoke",
           "id": "clove_ruse",
-          "cd_ticks": 560,
+          "cd_ticks": 160,
+          "particle": "heart",
           "sound": "block.beacon.activate",
+          "smoke": "clove",
+          "shape": "",
           "recipe": [
             [
               "minecraft:bone_meal",
@@ -3536,16 +3574,18 @@
           "type": "AREA",
           "center": "self",
           "radius": 1,
-          "heal": 10,
+          "passive": true,
+          "ndy": true,
+          "ndy_time": 12,
           "self_fx": [
             [
               "regeneration",
-              12,
+              8,
               2
             ],
             [
               "resistance",
-              12,
+              8,
               1
             ]
           ],
@@ -4284,15 +4324,17 @@
           "cd": 28,
           "type": "ZONE",
           "center": "target",
-          "range": 28,
-          "throw": true,
-          "radius": 3,
+          "range": 30,
+          "throw": false,
+          "radius": 4,
           "duration": 8,
-          "shape": "orb",
+          "vfx": "smoke",
           "id": "miks_waveform",
           "cd_ticks": 560,
           "particle": "note",
           "sound": "block.beacon.activate",
+          "smoke": "miks",
+          "shape": "",
           "recipe": [
             [
               "minecraft:note_block",
